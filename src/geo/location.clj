@@ -82,6 +82,15 @@
   (to-location [_]
     nil))
 
+(extend-type Object
+  ILocation
+  (latitude [_]
+    nil)
+  (longitude [_]
+    nil)
+  (to-location [_]
+    nil))
+
 (extend-type clojure.lang.IPersistentMap
   ILocation
   (latitude [map]
