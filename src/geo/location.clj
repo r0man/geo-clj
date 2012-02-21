@@ -33,21 +33,23 @@
 (defn unwrap-longitude [longitude]
   (if (> longitude 180) (- longitude 360) longitude))
 
-(defn make-location [latitude longitude]
+(defn make-location
+  "Make a Location from `latitude` and `longitude`."
+  [latitude longitude]
   (Location.
    (parse-double latitude)
    (unwrap-longitude (parse-double longitude))))
 
 (defn format-latitude
-  "Format the latitude."
+  "Format the `latitude`."
   [latitude] (if latitude (format "%.2f" latitude)))
 
 (defn format-longitude
-  "Format the longitude."
+  "Format the `longitude`."
   [longitude] (format-latitude longitude))
 
 (defn format-location
-  "Format the location."
+  "Format the `location`."
   [location]
   (if (location? location)
     (->> [(format-latitude (latitude location))
@@ -55,10 +57,11 @@
          (join ", "))))
 
 (defn parse-location
-  "Parse the location."
-  [location & {:keys [junk-allowed]}]
+  "Parse `string` as a Location. Raises an exception unless
+  `junk-allowed` is true."
+  [string & {:keys [junk-allowed]}]
   (try
-    (let [[latitude longitude] (split (trim location) #"(\s|,)+")]
+    (let [[latitude longitude] (split (trim (str string)) #"(\s|,)+")]
       (make-location latitude longitude))
     (catch Exception e
       (when-not junk-allowed
