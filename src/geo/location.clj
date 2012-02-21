@@ -53,7 +53,7 @@
   [location]
   (if (location? location)
     (->> [(format-latitude (latitude location))
-          (format-latitude (longitude location))]
+          (format-longitude (longitude location))]
          (join ", "))))
 
 (defn parse-location
