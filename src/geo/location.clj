@@ -12,7 +12,7 @@
   (longitude [location]
     "Returns the longitude of `location`.")
   (to-location [obj]
-    "Convert `obj` into a bounding loction."))
+    "Convert `obj` into a Location."))
 
 (defrecord Location [latitude longitude]
   ILocation
