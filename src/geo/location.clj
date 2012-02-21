@@ -70,7 +70,7 @@
 (defmacro with-current-location
   "Evaluate `body` with `*current-location*` bound to `location`."
   [location & body]
-  `(binding [*current-location* ~location]
+  `(binding [*current-location* (to-location ~location)]
      ~@body))
 
 (extend-type nil

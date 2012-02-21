@@ -93,5 +93,9 @@
     (make-location -35.522452 148.045733)))
 
 (deftest test-with-current-location
+  (with-current-location nil
+    (is (nil? *current-location*)))
+  (with-current-location "-35.522452 148.045733"
+    (is (= (make-location -35.522452 148.045733) *current-location*)))
   (with-current-location (make-location -35.522452 148.045733)
     (is (= (make-location -35.522452 148.045733) *current-location*))))
