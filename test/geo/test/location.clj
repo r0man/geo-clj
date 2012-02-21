@@ -86,6 +86,10 @@
     " -35.522452,148.045733"
     (make-location -35.522452 148.045733)
     " -35.522452 148.045733 "
+    (make-location -35.522452 148.045733)
+    {:latitude -35.522452 :longitude 148.045733}
+    (make-location -35.522452 148.045733)
+    {:lat -35.522452 :lng 148.045733}
     (make-location -35.522452 148.045733)))
 
 (deftest test-with-current-location

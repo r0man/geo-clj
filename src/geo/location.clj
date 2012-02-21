@@ -81,13 +81,13 @@
 
 (extend-type clojure.lang.IPersistentMap
   ILocation
-  (latitude [m]
-    (:latitude m))
-  (longitude [m]
-    (:longitude m))
-  (to-location [this]
-    (if (location? this)
-      (make-location (latitude this) (longitude this)))))
+  (latitude [map]
+    (or (:latitude map) (:lat map)))
+  (longitude [map]
+    (or (:longitude map) (:lng map)))
+  (to-location [map]
+    (if (location? map)
+      (make-location (latitude map) (longitude map)))))
 
 (extend-type String
   ILocation
