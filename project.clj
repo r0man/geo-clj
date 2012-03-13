@@ -1,5 +1,6 @@
-(defproject geo-clj "0.0.2-SNAPSHOT"
-  :author "Roman Scherer"
+(defproject geo-clj/geo-clj "0.0.3-SNAPSHOT"
   :description "An experimental Clojure geo library."
+  :dependencies [[org.clojure/clojure "1.4.0-beta4"]]
+  :author "Roman Scherer"
   :url "http://github.com/r0man/geo-clj"
-  :dependencies [[org.clojure/clojure "1.4.0-beta4"]])
+  :min-lein-version "2.0.0")
