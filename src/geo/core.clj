@@ -34,7 +34,10 @@
 (defrecord MultiPoint [coordinates]
   ICoordinate
   (coordinates [p]
-    coordinates))
+    coordinates)
+  WKT
+  (wkt [p]
+    (str "MULTIPOINT(" (join ", " (map format-position coordinates)) ")")))
 
 (defrecord LineString [coordinates]
   ICoordinate
@@ -64,6 +67,9 @@
 
 (defn line-string [& coordinates]
   (->LineString coordinates))
+
+(defn multi-point [& coordinates]
+  (->MultiPoint coordinates))
 
 (defn print-wkt [p w]
   (.write w "#wkt \"")
