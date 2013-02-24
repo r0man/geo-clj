@@ -2,7 +2,7 @@
   (:require [clojure.string :refer [join]]))
 
 (defprotocol ICoordinate
-  (coordinates [o] "Returns the coordinates of the point `o`."))
+  (coordinates [o] "Returns the coordinates of the object `o`."))
 
 (defprotocol IPoint
   (point-x [p] "Returns the x coordinate of the point `p`.")
