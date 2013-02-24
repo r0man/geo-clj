@@ -1,4 +1,4 @@
-# GEO-CLJ
+# GEO-CLJ [![Build Status](https://travis-ci.org/r0man/geo-clj.png)](https://travis-ci.org/r0man/geo-clj)
 
 Experimental Clojure geo library.
 
