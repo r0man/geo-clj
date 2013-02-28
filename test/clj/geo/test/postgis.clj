@@ -1,5 +1,5 @@
 (ns geo.test.postgis
-  (:import [org.postgis LineString MultiLineString MultiPoint MultiPolygon Point])
+  (:import [org.postgis LineString MultiLineString MultiPoint MultiPolygon Point PGgeometry])
   (:require [geo.core :refer [coordinates wkt point-x point-y point-z]])
   (:use clojure.test
         geo.postgis))
@@ -43,3 +43,9 @@
 (deftest test-point-z
   (is (nil? (point-z (point 1 2))))
   (is (= 3.0 (point-z (point 1 2 3)))))
+
+(deftest test-pr-str
+  (are [s expected]
+       (is (= expected (pr-str s)))
+       (point 1 2) "#geo/point[1.0 2.0]"
+       (PGgeometry. (point 1 2)) "#geo/point[1.0 2.0]"))
