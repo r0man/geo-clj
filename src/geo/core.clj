@@ -62,16 +62,24 @@
   (coordinates [p]
     coordinates))
 
-(defn point [x y & [z]]
+(defn point
+  "Make a new Point."
+  [x y & [z]]
   (->Point (if z [x y z] [x y])))
 
-(defn line-string [& coordinates]
+(defn line-string
+  "Make a new LineString."
+  [& coordinates]
   (->LineString coordinates))
 
-(defn multi-point [& coordinates]
+(defn multi-point
+  "Make a new MultiPoint."
+  [& coordinates]
   (->MultiPoint coordinates))
 
-(defn print-wkt [type obj writer]
+(defn print-wkt
+  "Print the geometric `obj` as `type` to `writer`."
+  [type obj writer]
   (.write writer (str "#geo/" type))
   (.write writer (pr-str (coordinates obj))))
 

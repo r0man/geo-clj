@@ -42,17 +42,23 @@
   (wkt [geo]
     (str geo)))
 
-(defn point [x y & [z]]
+(defn point
+  "Make a new Point."
+  [x y & [z]]
   (if z
     (Point. x y z)
     (Point. x y)))
 
-(defn line-string [& coordinates]
+(defn line-string
+  "Make a new LineString."
+  [& coordinates]
   (->> (map (partial apply point) coordinates)
        (into-array Point)
        (LineString.)))
 
-(defn multi-point [& coordinates]
+(defn multi-point
+  "Make a new MultiPoint."
+  [& coordinates]
   (MultiPoint. (into-array Point (map #(apply point %1) coordinates))))
 
 ;; PRINT-DUP
