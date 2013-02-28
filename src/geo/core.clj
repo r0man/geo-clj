@@ -10,7 +10,7 @@
   (point-z [point] "Returns the z coordinate of `point`."))
 
 (defprotocol IWellKnownText
-  (wkt [o] "Returns `o` as a WKT formatted string."))
+  (wkt [obj] "Returns `obj` as a WKT formatted string."))
 
 (defn- format-position [p]
   (let [[x y z] p]
@@ -18,48 +18,48 @@
 
 (defrecord LineString [coordinates]
   ICoordinate
-  (coordinates [p]
+  (coordinates [geo]
     coordinates)
   IWellKnownText
-  (wkt [p]
+  (wkt [geo]
     (str "LINESTRING(" (join ", " (map format-position coordinates)) ")")))
 
 (defrecord MultiLineString [coordinates]
   ICoordinate
-  (coordinates [p]
+  (coordinates [geo]
     coordinates))
 
 (defrecord MultiPolygon [coordinates]
   ICoordinate
-  (coordinates [p]
+  (coordinates [geo]
     coordinates))
 
 (defrecord MultiPoint [coordinates]
   ICoordinate
-  (coordinates [p]
+  (coordinates [geo]
     coordinates)
   IWellKnownText
-  (wkt [p]
+  (wkt [geo]
     (str "MULTIPOINT(" (join ", " (map format-position coordinates)) ")")))
 
 (defrecord Point [coordinates]
   ICoordinate
-  (coordinates [p]
+  (coordinates [geo]
     coordinates)
   IPoint
-  (point-x [p]
+  (point-x [geo]
     (nth coordinates 0))
-  (point-y [p]
+  (point-y [geo]
     (nth coordinates 1))
-  (point-z [p]
+  (point-z [geo]
     (nth coordinates 2 nil))
   IWellKnownText
-  (wkt [p]
+  (wkt [geo]
     (str "POINT" (seq coordinates))))
 
 (defrecord Polygon [coordinates]
   ICoordinate
-  (coordinates [p]
+  (coordinates [geo]
     coordinates))
 
 (defn point
