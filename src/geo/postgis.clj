@@ -1,8 +1,31 @@
 (ns geo.postgis
   (:import [org.postgis LineString MultiLineString MultiPoint MultiPolygon Point])
-  (:require [geo.core :refer [print-wkt wkt]]))
+  (:require [geo.core :as core]))
 
-(extend-protocol IWellKnownText
+(extend-protocol core/ICoordinate
+  LineString
+  (coordinates [geo]
+    (map core/coordinates (.getPoints geo)))
+  Point
+  (coordinates [geo]
+    (if-let [z (core/point-z geo)]
+      [(core/point-x geo) (core/point-y geo) z]
+      [(core/point-x geo) (core/point-y geo)]))
+  MultiPoint
+  (coordinates [geo]
+    (map core/coordinates (.getPoints geo))))
+
+(extend-type Point
+  core/IPoint
+  (point-x [geo]
+    (.getX geo))
+  (point-y [geo]
+    (.getY geo))
+  (point-z [geo]
+    (if (= 3 (.getDimension geo))
+      (.getZ geo))))
+
+(extend-protocol core/IWellKnownText
   LineString
   (wkt [geo]
     (str geo))
@@ -19,46 +42,78 @@
   (wkt [geo]
     (str geo)))
 
+(defn point [x y & [z]]
+  (if z
+    (Point. x y z)
+    (Point. x y)))
+
+(defn line-string [& coordinates]
+  (->> (map (partial apply point) coordinates)
+       (into-array Point)
+       (LineString.)))
+
+(defn multi-point [& coordinates]
+  (MultiPoint. (into-array Point (map #(apply point %1) coordinates))))
+
+;; READER
+
+(defn read-line-string
+  "Read a LineString from `coordinates`."
+  [coordinates] (apply line-string coordinates))
+
+(defn read-multi-point
+  "Read a MultiPoint from `coordinates`."
+  [coordinates] (apply multi-point coordinates))
+
+(defn read-point
+  "Read a Point from `coordinates`."
+  [coordinates] (apply point coordinates))
+
+(def ^:dynamic *readers*
+  {'geo/line-string read-line-string
+   'geo/multi-point read-multi-point
+   'geo/point read-point})
+
 ;; PRINT-DUP
 
 (defmethod print-dup LineString
   [geo writer]
-  (print-wkt geo writer))
+  (core/print-wkt "line-string" geo writer))
 
 (defmethod print-dup MultiLineString
   [geo writer]
-  (print-wkt geo writer))
-
-(defmethod print-dup MultiPolygon
-  [geo writer]
-  (print-wkt geo writer))
+  (core/print-wkt "multi-line-string" geo writer ))
 
 (defmethod print-dup MultiPoint
   [geo writer]
-  (print-wkt geo writer))
+  (core/print-wkt "multi-point" geo writer))
+
+(defmethod print-dup MultiPolygon
+  [geo writer]
+  (core/print-wkt "multi-polygon" geo writer))
 
 (defmethod print-dup Point
   [geo writer]
-  (print-wkt geo writer))
+  (core/print-wkt "point" geo writer))
 
 ;; PRINT-METHOD
 
 (defmethod print-method LineString
   [geo writer]
-  (print-wkt geo writer))
+  (core/print-wkt "line-string" geo writer))
 
 (defmethod print-method MultiLineString
   [geo writer]
-  (print-wkt geo writer))
-
-(defmethod print-method MultiPolygon
-  [geo writer]
-  (print-wkt geo writer))
+  (core/print-wkt "multi-line-string" geo writer))
 
 (defmethod print-method MultiPoint
   [geo writer]
-  (print-wkt geo writer))
+  (core/print-wkt "multi-point" geo writer))
+
+(defmethod print-method MultiPolygon
+  [geo writer]
+  (core/print-wkt "multi-polygon" geo writer))
 
 (defmethod print-method Point
   [geo writer]
-  (print-wkt geo writer))
+  (core/print-wkt "point" geo writer))
