@@ -24,6 +24,4 @@
                                    :pretty-print true}
                         :source-paths ["src/cljs"]
                         :jar true}]
-              :crossover-jar true
-              :crossovers [geo.core]
               :repl-listen-port 9000})
