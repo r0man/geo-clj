@@ -2,12 +2,12 @@
   (:require [clojure.string :refer [join]]))
 
 (defprotocol ICoordinate
-  (coordinates [o] "Returns the coordinates of the object `o`."))
+  (coordinates [obj] "Returns the coordinates of the `obj`."))
 
 (defprotocol IPoint
-  (point-x [p] "Returns the x coordinate of the point `p`.")
-  (point-y [p] "Returns the y coordinate of the point `p`.")
-  (point-z [p] "Returns the z coordinate of the point `p`."))
+  (point-x [point] "Returns the x coordinate of `point`.")
+  (point-y [point] "Returns the y coordinate of `point`.")
+  (point-z [point] "Returns the z coordinate of `point`."))
 
 (defprotocol IWellKnownText
   (wkt [o] "Returns `o` as a WKT formatted string."))
