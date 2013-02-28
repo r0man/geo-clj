@@ -55,25 +55,6 @@
 (defn multi-point [& coordinates]
   (MultiPoint. (into-array Point (map #(apply point %1) coordinates))))
 
-;; READER
-
-(defn read-line-string
-  "Read a LineString from `coordinates`."
-  [coordinates] (apply line-string coordinates))
-
-(defn read-multi-point
-  "Read a MultiPoint from `coordinates`."
-  [coordinates] (apply multi-point coordinates))
-
-(defn read-point
-  "Read a Point from `coordinates`."
-  [coordinates] (apply point coordinates))
-
-(def ^:dynamic *readers*
-  {'geo/line-string read-line-string
-   'geo/multi-point read-multi-point
-   'geo/point read-point})
-
 ;; PRINT-DUP
 
 (defmethod print-dup LineString
@@ -117,3 +98,22 @@
 (defmethod print-method Point
   [geo writer]
   (core/print-wkt "point" geo writer))
+
+;; READER
+
+(defn read-line-string
+  "Read a LineString from `coordinates`."
+  [coordinates] (apply line-string coordinates))
+
+(defn read-multi-point
+  "Read a MultiPoint from `coordinates`."
+  [coordinates] (apply multi-point coordinates))
+
+(defn read-point
+  "Read a Point from `coordinates`."
+  [coordinates] (apply point coordinates))
+
+(def ^:dynamic *readers*
+  {'geo/line-string read-line-string
+   'geo/multi-point read-multi-point
+   'geo/point read-point})

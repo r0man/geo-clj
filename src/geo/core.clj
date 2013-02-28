@@ -71,30 +71,6 @@
 (defn multi-point [& coordinates]
   (->MultiPoint coordinates))
 
-;; READER
-
-(defn read-line-string
-  "Read a LineString from `coordinates`."
-  [coordinates] (->LineString coordinates))
-
-(defn read-multi-point
-  "Read a MultiPoint from `coordinates`."
-  [coordinates] (->MultiPoint coordinates))
-
-(defn read-multi-polygon
-  "Read a MultiPolygon from `coordinates`."
-  [coordinates] (->MultiPolygon coordinates))
-
-(defn read-point
-  "Read a Point from `coordinates`."
-  [coordinates] (->Point coordinates))
-
-(def ^:dynamic *readers*
-  {'geo/line-string read-line-string
-   'geo/multi-point read-multi-point
-   'geo/multi-polygon read-multi-polygon
-   'geo/point read-point})
-
 (defn print-wkt [type obj writer]
   (.write writer (str "#geo/" type))
   (.write writer (pr-str (coordinates obj))))
@@ -142,3 +118,27 @@
 (defmethod print-method Point
   [geo writer]
   (print-wkt "point" geo writer))
+
+;; READER
+
+(defn read-line-string
+  "Read a LineString from `coordinates`."
+  [coordinates] (->LineString coordinates))
+
+(defn read-multi-point
+  "Read a MultiPoint from `coordinates`."
+  [coordinates] (->MultiPoint coordinates))
+
+(defn read-multi-polygon
+  "Read a MultiPolygon from `coordinates`."
+  [coordinates] (->MultiPolygon coordinates))
+
+(defn read-point
+  "Read a Point from `coordinates`."
+  [coordinates] (->Point coordinates))
+
+(def ^:dynamic *readers*
+  {'geo/line-string read-line-string
+   'geo/multi-point read-multi-point
+   'geo/multi-polygon read-multi-polygon
+   'geo/point read-point})
