@@ -80,52 +80,52 @@
 (defn print-wkt
   "Print the geometric `obj` as `type` to `writer`."
   [type obj writer]
-  (.write writer (str "#geo/" type))
+  (.write writer (str "#geo/" (name type)))
   (.write writer (pr-str (coordinates obj))))
 
 ;; PRINT-DUP
 
 (defmethod print-dup LineString
   [geo writer]
-  (print-wkt "line-string" geo writer))
+  (print-wkt :line-string geo writer))
 
 (defmethod print-dup MultiLineString
   [geo writer]
-  (print-wkt "multi-line-string" geo writer ))
+  (print-wkt :multi-line-string geo writer ))
 
 (defmethod print-dup MultiPoint
   [geo writer]
-  (print-wkt "multi-point" geo writer))
+  (print-wkt :multi-point geo writer))
 
 (defmethod print-dup MultiPolygon
   [geo writer]
-  (print-wkt "multi-polygon" geo writer))
+  (print-wkt :multi-polygon geo writer))
 
 (defmethod print-dup Point
   [geo writer]
-  (print-wkt "point" geo writer))
+  (print-wkt :point geo writer))
 
 ;; PRINT-METHOD
 
 (defmethod print-method LineString
   [geo writer]
-  (print-wkt "line-string" geo writer))
+  (print-wkt :line-string geo writer))
 
 (defmethod print-method MultiLineString
   [geo writer]
-  (print-wkt "multi-line-string" geo writer))
+  (print-wkt :multi-line-string geo writer))
 
 (defmethod print-method MultiPoint
   [geo writer]
-  (print-wkt "multi-point" geo writer))
+  (print-wkt :multi-point geo writer))
 
 (defmethod print-method MultiPolygon
   [geo writer]
-  (print-wkt "multi-polygon" geo writer))
+  (print-wkt :multi-polygon geo writer))
 
 (defmethod print-method Point
   [geo writer]
-  (print-wkt "point" geo writer))
+  (print-wkt :point geo writer))
 
 ;; READER
 
