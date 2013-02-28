@@ -1,6 +1,6 @@
 # GEO-CLJ [![Build Status](https://travis-ci.org/r0man/geo-clj.png)](https://travis-ci.org/r0man/geo-clj)
 
-Experimental Clojure geo library.
+Geographic encoding/decoding for Clojure and ClojureScript).
 
 ## Installation
 
