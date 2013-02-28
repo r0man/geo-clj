@@ -1,5 +1,5 @@
 (ns geo.postgis
-  (:import [org.postgis LineString MultiLineString MultiPoint MultiPolygon Point])
+  (:import [org.postgis PGgeometry LineString MultiLineString MultiPoint MultiPolygon Point])
   (:require [geo.core :as core]))
 
 (extend-protocol core/ICoordinate
@@ -62,6 +62,10 @@
   (MultiPoint. (into-array Point (map #(apply point %1) coordinates))))
 
 ;; PRINT-DUP
+
+(defmethod print-method PGgeometry
+  [geo writer]
+  (print-method (.getGeometry geo) writer))
 
 (defmethod print-dup LineString
   [geo writer]
