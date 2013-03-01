@@ -7,27 +7,41 @@
   LineString
   (coordinates [geo]
     (vec (map core/coordinates (.getPoints geo))))
+  (srid [geo]
+    (.getSrid geo))
   LinearRing
   (coordinates [geo]
     (vec (map core/coordinates (.getPoints geo))))
+  (srid [geo]
+    (.getSrid geo))
   Point
   (coordinates [geo]
     (if-let [z (core/point-z geo)]
       [(core/point-x geo) (core/point-y geo) z]
       [(core/point-x geo) (core/point-y geo)]))
+  (srid [geo]
+    (.getSrid geo))
   MultiLineString
   (coordinates [geo]
     (vec (map core/coordinates (.getLines geo))))
+  (srid [geo]
+    (.getSrid geo))
   MultiPolygon
   (coordinates [geo]
     (vec (map core/coordinates (.getPolygons geo))))
+  (srid [geo]
+    (.getSrid geo))
   MultiPoint
   (coordinates [geo]
     (vec (map core/coordinates (.getPoints geo))))
+  (srid [geo]
+    (.getSrid geo))
   Polygon
   (coordinates [geo]
     (vec (for [n (range 0 (.numRings geo))]
-           (core/coordinates (.getRing geo n))))))
+           (core/coordinates (.getRing geo n)))))
+  (srid [geo]
+    (.getSrid geo)))
 
 (extend-type Point
   core/IPoint
@@ -64,44 +78,50 @@
 
 (defn point
   "Make a new Point."
-  [x y & [z]]
-  (if z
-    (Point. x y z)
-    (Point. x y)))
+  [srid x y & [z]]
+  (doto (if z (Point. x y z)
+            (Point. x y))
+    (.setSrid (or srid -1))))
 
 (defn line-string
   "Make a new LineString."
-  [& coordinates]
-  (->> (map (partial apply point) coordinates)
-       (into-array Point)
-       (LineString.)))
+  [srid & coordinates]
+  (doto (->> (map (partial apply point srid) coordinates)
+             (into-array Point)
+             (LineString.))
+    (.setSrid (or srid -1))))
 
 (defn linear-ring
   "Make a new LinearRing."
-  [& coordinates]
-  (LinearRing. (into-array Point (map #(apply point %1) coordinates))))
+  [srid & coordinates]
+  (doto (LinearRing. (into-array Point (map #(apply point srid %1) coordinates)))
+    (.setSrid (or srid -1))))
 
 (defn multi-line-string
   "Make a new MultiLineString."
-  [& coordinates]
-  (->> (map (partial apply line-string) coordinates)
-       (into-array LineString)
-       (MultiLineString.)))
+  [srid & coordinates]
+  (doto (->> (map (partial apply line-string srid) coordinates)
+             (into-array LineString)
+             (MultiLineString.))
+    (.setSrid (or srid -1))))
 
 (defn multi-point
   "Make a new MultiPoint."
-  [& coordinates]
-  (MultiPoint. (into-array Point (map #(apply point %1) coordinates))))
+  [srid & coordinates]
+  (doto (MultiPoint. (into-array Point (map #(apply point srid %1) coordinates)))
+    (.setSrid (or srid -1))))
 
 (defn polygon
   "Make a new Polygon."
-  [& coordinates]
-  (Polygon. (into-array LinearRing (map #(apply linear-ring %1) coordinates))))
+  [srid & coordinates]
+  (doto (Polygon. (into-array LinearRing (map #(apply linear-ring srid %1) coordinates)))
+    (.setSrid (or srid -1))))
 
 (defn multi-polygon
   "Make a new MultiPolygon."
-  [& coordinates]
-  (MultiPolygon. (into-array Polygon (map #(apply polygon %1) coordinates))))
+  [srid & coordinates]
+  (doto (MultiPolygon. (into-array Polygon (map #(apply polygon srid %1) coordinates)))
+    (.setSrid (or srid -1))))
 
 ;; PRINT-DUP
 
@@ -163,27 +183,27 @@
 
 (defn read-line-string
   "Read a LineString from `coordinates`."
-  [coordinates] (apply line-string coordinates))
+  [[srid coordinates]] (apply line-string srid coordinates))
 
 (defn read-multi-line-string
   "Read a MultiLineString from `coordinates`."
-  [coordinates] (apply multi-line-string coordinates))
+  [[srid coordinates]] (apply multi-line-string srid coordinates))
 
 (defn read-multi-point
   "Read a MultiPoint from `coordinates`."
-  [coordinates] (apply multi-point coordinates))
+  [[srid coordinates]] (apply multi-point srid coordinates))
 
 (defn read-multi-polygon
   "Read a MultiPoint from `coordinates`."
-  [coordinates] (apply multi-polygon coordinates))
+  [[srid coordinates]] (apply multi-polygon srid coordinates))
 
 (defn read-point
   "Read a Point from `coordinates`."
-  [coordinates] (apply point coordinates))
+  [[srid coordinates]] (apply point srid coordinates))
 
 (defn read-polygon
   "Read a Polygon from `coordinates`."
-  [coordinates] (apply polygon coordinates))
+  [[srid coordinates]] (apply polygon srid coordinates))
 
 (def ^:dynamic *readers*
   {'geo/line-string read-line-string

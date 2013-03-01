@@ -2,7 +2,8 @@
   (:require [clojure.string :refer [join]]))
 
 (defprotocol ICoordinate
-  (coordinates [obj] "Returns the coordinates of the `obj`."))
+  (coordinates [obj] "Returns the coordinates of `obj`.")
+  (srid [obj] "Returns spatial reference system identifier `obj`."))
 
 (defprotocol IPoint
   (point-x [point] "Returns the x coordinate of `point`.")
@@ -16,47 +17,57 @@
   (let [[x y z] p]
     (str x " " y (if z (str " " z)))))
 
-(defrecord LineString [coordinates]
+(defrecord LineString [srid coordinates]
   ICoordinate
   (coordinates [geo]
     coordinates)
+  (srid [geo]
+    srid)
   IWellKnownText
   (wkt [geo]
-    (str "LINESTRING(" (join "," (map format-position coordinates)) ")")))
+    (format "SRID=%s;LINESTRING(%s)" srid (join "," (map format-position coordinates)))))
 
-(defrecord MultiLineString [coordinates]
+(defrecord MultiLineString [srid coordinates]
   ICoordinate
   (coordinates [geo]
     coordinates)
+  (srid [geo]
+    srid)
   IWellKnownText
   (wkt [geo]
     (let [coordinates (map #(str "(" (join "," (map format-position %1)) ")") coordinates)]
-      (str "MULTILINESTRING(" (join "," coordinates) ")"))))
+      (format "SRID=%s;MULTILINESTRING(%s)" srid (join "," coordinates)))))
 
-(defrecord MultiPolygon [coordinates]
+(defrecord MultiPolygon [srid coordinates]
   ICoordinate
   (coordinates [geo]
     coordinates)
+  (srid [geo]
+    srid)
   IWellKnownText
   (wkt [geo]
     (let [coordinates
           (map (fn [polygon]
                  (str "(" (join "," (map #(str "(" (join "," (map format-position %1)) ")") polygon)) ")"))
                coordinates)]
-      (str "MULTIPOLYGON(" (join "," coordinates) ")"))))
+      (format "SRID=%s;MULTIPOLYGON(%s)" srid (join "," coordinates)))))
 
-(defrecord MultiPoint [coordinates]
+(defrecord MultiPoint [srid coordinates]
   ICoordinate
   (coordinates [geo]
     coordinates)
+  (srid [geo]
+    srid)
   IWellKnownText
   (wkt [geo]
-    (str "MULTIPOINT(" (join "," (map format-position coordinates)) ")")))
+    (format "SRID=%s;MULTIPOINT(%s)" srid (join "," (map format-position coordinates)))))
 
-(defrecord Point [coordinates]
+(defrecord Point [srid coordinates]
   ICoordinate
   (coordinates [geo]
     coordinates)
+  (srid [geo]
+    srid)
   IPoint
   (point-x [geo]
     (nth coordinates 0))
@@ -66,63 +77,65 @@
     (nth coordinates 2 nil))
   IWellKnownText
   (wkt [geo]
-    (str "POINT" (seq coordinates))))
+    (format "SRID=%s;POINT%s" srid (seq coordinates))))
 
-(defrecord Polygon [coordinates]
+(defrecord Polygon [srid coordinates]
   ICoordinate
   (coordinates [geo]
     coordinates)
+  (srid [geo]
+    srid)
   IWellKnownText
   (wkt [geo]
     (let [coordinates (map #(str "(" (join "," (map format-position %1)) ")") coordinates)]
-      (str "POLYGON(" (join "," coordinates) ")"))))
+      (format "SRID=%s;POLYGON(%s)" srid (join "," coordinates)))))
 
 (defn point
   "Make a new Point."
-  [x y & [z]]
+  [srid x y & [z]]
   (->Point
+   srid
    (if z
      [(float x) (float y) (float z)]
      [(float x) (float y)])))
 
 (defn line-string
   "Make a new LineString."
-  [& coordinates]
-  (->LineString
-   (vec (map #(vec (map float %1)) coordinates))))
+  [srid & coordinates]
+  (->LineString srid (vec (map #(vec (map float %1)) coordinates))))
 
 (defn multi-point
   "Make a new MultiPoint."
-  [& coordinates]
-  (->MultiPoint (vec (map #(vec (map float %1)) coordinates))))
+  [srid & coordinates]
+  (->MultiPoint srid (vec (map #(vec (map float %1)) coordinates))))
 
 (defn multi-line-string
   "Make a new MultiLineString."
-  [& coordinates]
+  [srid & coordinates]
   (->MultiLineString
-   (vec (map (fn [line] (vec (map #(vec (map float %1)) line)))
-             coordinates))))
+   srid (vec (map (fn [line] (vec (map #(vec (map float %1)) line)))
+                  coordinates))))
 
 (defn multi-polygon
   "Make a new MultiPolygon."
-  [& coordinates]
+  [srid & coordinates]
   (->MultiPolygon
-   (vec (map (fn [polygon]
-               (vec (map (fn [ring] (vec (map #(vec (map float %1)) ring))) polygon)))
-             coordinates))))
+   srid (vec (map (fn [polygon]
+                    (vec (map (fn [ring] (vec (map #(vec (map float %1)) ring))) polygon)))
+                  coordinates))))
 
 (defn polygon
   "Make a new Polygon."
-  [& coordinates]
+  [srid & coordinates]
   (->Polygon
-   (vec (map (fn [ring] (vec (map #(vec (map float %1)) ring)))
-             coordinates))))
+   srid (vec (map (fn [ring] (vec (map #(vec (map float %1)) ring)))
+                  coordinates))))
 
 (defn print-wkt
   "Print the geometric `obj` as `type` to `writer`."
   [type obj writer]
-  (.write writer (str "#geo/" (name type)))
-  (.write writer (pr-str (coordinates obj))))
+  (.write writer (str "#geo/" (name type) "[" (srid obj) " "))
+  (.write writer (str (pr-str (coordinates obj)) "]")))
 
 ;; PRINT-DUP
 
@@ -180,27 +193,27 @@
 
 (defn read-line-string
   "Read a LineString from `coordinates`."
-  [coordinates] (->LineString coordinates))
+  [[srid coordinates]] (->LineString srid coordinates))
 
 (defn read-multi-line-string
   "Read a MultiLineString from `coordinates`."
-  [coordinates] (->MultiLineString coordinates))
+  [[srid coordinates]] (->MultiLineString srid coordinates))
 
 (defn read-multi-point
   "Read a MultiPoint from `coordinates`."
-  [coordinates] (->MultiPoint coordinates))
+  [[srid coordinates]] (->MultiPoint srid coordinates))
 
 (defn read-multi-polygon
   "Read a MultiPolygon from `coordinates`."
-  [coordinates] (->MultiPolygon coordinates))
+  [[srid coordinates]] (->MultiPolygon srid coordinates))
 
 (defn read-point
   "Read a Point from `coordinates`."
-  [coordinates] (->Point coordinates))
+  [[srid coordinates]] (->Point srid coordinates))
 
 (defn read-polygon
   "Read a Point from `coordinates`."
-  [coordinates] (->Polygon coordinates))
+  [[srid coordinates]] (->Polygon srid coordinates))
 
 (def ^:dynamic *readers*
   {'geo/line-string read-line-string
