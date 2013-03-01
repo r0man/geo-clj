@@ -15,6 +15,9 @@
     (if-let [z (core/point-z geo)]
       [(core/point-x geo) (core/point-y geo) z]
       [(core/point-x geo) (core/point-y geo)]))
+  MultiLineString
+  (coordinates [geo]
+    (vec (map core/coordinates (.getLines geo))))
   MultiPoint
   (coordinates [geo]
     (vec (map core/coordinates (.getPoints geo))))
@@ -74,6 +77,13 @@
   "Make a new LinearRing."
   [& coordinates]
   (LinearRing. (into-array Point (map #(apply point %1) coordinates))))
+
+(defn multi-line-string
+  "Make a new MultiLineString."
+  [& coordinates]
+  (->> (map (partial apply line-string) coordinates)
+       (into-array LineString)
+       (MultiLineString.)))
 
 (defn multi-point
   "Make a new MultiPoint."
@@ -147,6 +157,10 @@
   "Read a LineString from `coordinates`."
   [coordinates] (apply line-string coordinates))
 
+(defn read-multi-line-string
+  "Read a MultiLineString from `coordinates`."
+  [coordinates] (apply multi-line-string coordinates))
+
 (defn read-multi-point
   "Read a MultiPoint from `coordinates`."
   [coordinates] (apply multi-point coordinates))
@@ -161,6 +175,7 @@
 
 (def ^:dynamic *readers*
   {'geo/line-string read-line-string
+   'geo/multi-line-string read-multi-line-string
    'geo/multi-point read-multi-point
    'geo/point read-point
    'geo/polygon read-polygon})

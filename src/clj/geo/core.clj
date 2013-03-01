@@ -27,7 +27,11 @@
 (defrecord MultiLineString [coordinates]
   ICoordinate
   (coordinates [geo]
-    coordinates))
+    coordinates)
+  IWellKnownText
+  (wkt [geo]
+    (let [coordinates (map #(str "(" (join "," (map format-position %1)) ")") coordinates)]
+      (str "MULTILINESTRING(" (join "," coordinates) ")"))))
 
 (defrecord MultiPolygon [coordinates]
   ICoordinate
@@ -84,6 +88,13 @@
   "Make a new MultiPoint."
   [& coordinates]
   (->MultiPoint (vec (map #(vec (map float %1)) coordinates))))
+
+(defn multi-line-string
+  "Make a new MultiLineString."
+  [& coordinates]
+  (->MultiLineString
+   (vec (map (fn [line] (vec (map #(vec (map float %1)) line)))
+             coordinates))))
 
 (defn polygon
   "Make a new Polygon."
@@ -156,6 +167,10 @@
   "Read a LineString from `coordinates`."
   [coordinates] (->LineString coordinates))
 
+(defn read-multi-line-string
+  "Read a MultiLineString from `coordinates`."
+  [coordinates] (->MultiLineString coordinates))
+
 (defn read-multi-point
   "Read a MultiPoint from `coordinates`."
   [coordinates] (->MultiPoint coordinates))
@@ -174,6 +189,7 @@
 
 (def ^:dynamic *readers*
   {'geo/line-string read-line-string
+   'geo/multi-line-string read-multi-line-string
    'geo/multi-point read-multi-point
    'geo/multi-polygon read-multi-polygon
    'geo/point read-point

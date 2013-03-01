@@ -10,6 +10,7 @@
     (are [geo]
          (is (= geo (read-string (pr-str geo))))
          (line-string [30 10] [10 30] [40 40])
+         (multi-line-string [[10 10] [20 20] [10 40]] [[40 40] [30 30] [40 20] [30 10]])
          (multi-point [10 40] [40 30] [20 20] [30 10])
          (point 30 10 0)
          (polygon [[30 10] [10 20] [20 40] [40 40] [30 10]]))))
@@ -25,6 +26,17 @@
     (is (instance? LinearRing geo))
     (is (= [[30.0 10.0] [10.0 20.0] [20.0 40.0] [40.0 40.0] [30.0 10.0]] (coordinates geo)))
     (is (= "(30 10,10 20,20 40,40 40,30 10)" (wkt geo)))))
+
+(deftest test-multi-line-string
+  (let [geo (multi-line-string
+             [[10 10] [20 20] [10 40]]
+             [[40 40] [30 30] [40 20] [30 10]])]
+    (is (instance? MultiLineString geo))
+    (is (= [[[10.0 10.0] [20.0 20.0] [10.0 40.0]]
+            [[40.0 40.0] [30.0 30.0] [40.0 20.0] [30.0 10.0]]]
+           (coordinates geo)))
+    (is (= "MULTILINESTRING((10 10,20 20,10 40),(40 40,30 30,40 20,30 10))"
+           (wkt geo)))))
 
 (deftest test-multi-point
   (let [geo (multi-point [10 40] [40 30] [20 20] [30 10])]
@@ -71,6 +83,8 @@
        (is (= expected (pr-str s)))
        (line-string [30 10] [10 30] [40 40])
        "#geo/line-string[[30.0 10.0] [10.0 30.0] [40.0 40.0]]"
+       (multi-line-string [[10 10] [20 20] [10 40]] [[40 40] [30 30] [40 20] [30 10]])
+       "#geo/multi-line-string[[[10.0 10.0] [20.0 20.0] [10.0 40.0]] [[40.0 40.0] [30.0 30.0] [40.0 20.0] [30.0 10.0]]]"
        (multi-point [10 40] [40 30] [20 20] [30 10])
        "#geo/multi-point[[10.0 40.0] [40.0 30.0] [20.0 20.0] [30.0 10.0]]"
        (point 1 2)
