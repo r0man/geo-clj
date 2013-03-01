@@ -188,7 +188,7 @@
 (def ^:dynamic *readers*
   {'geo/line-string read-line-string
    'geo/multi-line-string read-multi-line-string
-   'geo/multi-polygon read-multi-polygon
    'geo/multi-point read-multi-point
+   'geo/multi-polygon read-multi-polygon
    'geo/point read-point
    'geo/polygon read-polygon})
