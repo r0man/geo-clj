@@ -1,4 +1,4 @@
-(defproject geo-clj "0.1.1-SNAPSHOT"
+(defproject geo-clj "0.2.0"
   :description "Geographic encoding/decoding for Clojure and ClojureScript)."
   :url "http://github.com/r0man/geo-clj"
   :author "Roman Scherer"
