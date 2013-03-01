@@ -77,7 +77,7 @@
     (nth coordinates 2 nil))
   IWellKnownText
   (ewkt [geo]
-    (format "SRID=%d;POINT%s" srid (seq coordinates))))
+    (format "SRID=%d;POINT(%s)" srid (format-position coordinates))))
 
 (defrecord Polygon [srid coordinates]
   ICoordinate
