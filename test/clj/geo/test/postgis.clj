@@ -11,7 +11,8 @@
          (is (= geo (read-string (pr-str geo))))
          (line-string [30 10] [10 30] [40 40])
          (multi-point [10 40] [40 30] [20 20] [30 10])
-         (point 30 10 0))))
+         (point 30 10 0)
+         (polygon [[30 10] [10 20] [20 40] [40 40] [30 10]]))))
 
 (deftest test-line-string
   (let [geo (line-string [30 10] [10 30] [40 40])]
@@ -68,5 +69,14 @@
 (deftest test-pr-str
   (are [s expected]
        (is (= expected (pr-str s)))
-       (point 1 2) "#geo/point[1.0 2.0]"
+       (line-string [30 10] [10 30] [40 40])
+       "#geo/line-string[[30.0 10.0] [10.0 30.0] [40.0 40.0]]"
+       (multi-point [10 40] [40 30] [20 20] [30 10])
+       "#geo/multi-point[[10.0 40.0] [40.0 30.0] [20.0 20.0] [30.0 10.0]]"
+       (point 1 2)
+       "#geo/point[1.0 2.0]"
+       (polygon [[30 10] [10 20] [20 40] [40 40] [30 10]])
+       "#geo/polygon[[[30.0 10.0] [10.0 20.0] [20.0 40.0] [40.0 40.0] [30.0 10.0]]]"
+       (point 1 2)
+       "#geo/point[1.0 2.0]"
        (PGgeometry. (point 1 2)) "#geo/point[1.0 2.0]"))

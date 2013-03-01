@@ -59,16 +59,6 @@
   (is (nil? (point-z (point 1 2))))
   (is (= 3.0 (point-z (point 1 2 3)))))
 
-(deftest test-point-x
-  (is (= 1.0 (point-x (point 1 2)))))
-
-(deftest test-point-y
-  (is (= 2.0 (point-y (point 1 2)))))
-
-(deftest test-point-z
-  (is (nil? (point-z (point 1 2))))
-  (is (= 3.0 (point-z (point 1 2 3)))))
-
 (deftest test-pr-str
   (are [s expected]
        (is (= expected (pr-str s)))

@@ -6,10 +6,10 @@
 (extend-protocol core/ICoordinate
   LineString
   (coordinates [geo]
-    (map core/coordinates (.getPoints geo)))
+    (vec (map core/coordinates (.getPoints geo))))
   LinearRing
   (coordinates [geo]
-    (map core/coordinates (.getPoints geo)))
+    (vec (map core/coordinates (.getPoints geo))))
   Point
   (coordinates [geo]
     (if-let [z (core/point-z geo)]
@@ -17,11 +17,11 @@
       [(core/point-x geo) (core/point-y geo)]))
   MultiPoint
   (coordinates [geo]
-    (map core/coordinates (.getPoints geo)))
+    (vec (map core/coordinates (.getPoints geo))))
   Polygon
   (coordinates [geo]
-    (for [n (range 0 (.numRings geo))]
-      (core/coordinates (.getRing geo n)))))
+    (vec (for [n (range 0 (.numRings geo))]
+           (core/coordinates (.getRing geo n))))))
 
 (extend-type Point
   core/IPoint
@@ -111,6 +111,10 @@
   [geo writer]
   (core/print-wkt :point geo writer))
 
+(defmethod print-dup Polygon
+  [geo writer]
+  (core/print-wkt :polygon geo writer))
+
 ;; PRINT-METHOD
 
 (defmethod print-method LineString
@@ -133,6 +137,10 @@
   [geo writer]
   (core/print-wkt :point geo writer))
 
+(defmethod print-method Polygon
+  [geo writer]
+  (core/print-wkt :polygon geo writer))
+
 ;; READER
 
 (defn read-line-string
@@ -147,7 +155,12 @@
   "Read a Point from `coordinates`."
   [coordinates] (apply point coordinates))
 
+(defn read-polygon
+  "Read a Polygon from `coordinates`."
+  [coordinates] (apply polygon coordinates))
+
 (def ^:dynamic *readers*
   {'geo/line-string read-line-string
    'geo/multi-point read-multi-point
-   'geo/point read-point})
+   'geo/point read-point
+   'geo/polygon read-polygon})
