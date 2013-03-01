@@ -69,22 +69,28 @@
 (defn point
   "Make a new Point."
   [x y & [z]]
-  (->Point (if z [x y z] [x y])))
+  (->Point
+   (if z
+     [(float x) (float y) (float z)]
+     [(float x) (float y)])))
 
 (defn line-string
   "Make a new LineString."
   [& coordinates]
-  (->LineString coordinates))
+  (->LineString
+   (vec (map #(vec (map float %1)) coordinates))))
 
 (defn multi-point
   "Make a new MultiPoint."
   [& coordinates]
-  (->MultiPoint coordinates))
+  (->MultiPoint (vec (map #(vec (map float %1)) coordinates))))
 
 (defn polygon
   "Make a new Polygon."
   [& coordinates]
-  (->Polygon coordinates))
+  (->Polygon
+   (vec (map (fn [ring] (vec (map #(vec (map float %1)) ring)))
+             coordinates))))
 
 (defn print-wkt
   "Print the geometric `obj` as `type` to `writer`."
@@ -114,6 +120,10 @@
   [geo writer]
   (print-wkt :point geo writer))
 
+(defmethod print-dup Polygon
+  [geo writer]
+  (print-wkt :polygon geo writer))
+
 ;; PRINT-METHOD
 
 (defmethod print-method LineString
@@ -136,6 +146,10 @@
   [geo writer]
   (print-wkt :point geo writer))
 
+(defmethod print-method Polygon
+  [geo writer]
+  (print-wkt :polygon geo writer))
+
 ;; READER
 
 (defn read-line-string
@@ -154,8 +168,13 @@
   "Read a Point from `coordinates`."
   [coordinates] (->Point coordinates))
 
+(defn read-polygon
+  "Read a Point from `coordinates`."
+  [coordinates] (->Polygon coordinates))
+
 (def ^:dynamic *readers*
   {'geo/line-string read-line-string
    'geo/multi-point read-multi-point
    'geo/multi-polygon read-multi-polygon
-   'geo/point read-point})
+   'geo/point read-point
+   'geo/polygon read-polygon})
