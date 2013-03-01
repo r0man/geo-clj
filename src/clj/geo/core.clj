@@ -63,7 +63,8 @@
     coordinates)
   IWellKnownText
   (wkt [geo]
-    (str "POLYGON(" (join "," (map (fn [c] (str "(" (join "," (map format-position c)) ")")) coordinates)) ")")))
+    (let [coordinates (map #(str "(" (join "," (map format-position %1)) ")") coordinates)]
+      (str "POLYGON(" (join "," coordinates) ")"))))
 
 (defn point
   "Make a new Point."
