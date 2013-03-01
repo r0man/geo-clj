@@ -131,7 +131,7 @@
    srid (vec (map (fn [ring] (vec (map #(vec (map float %1)) ring)))
                   coordinates))))
 
-(defn print-wkt
+(defn print-geo
   "Print the geometric `obj` as `type` to `writer`."
   [type obj writer]
   (.write writer (str "#geo/" (name type) "[" (srid obj) " "))
@@ -141,53 +141,53 @@
 
 (defmethod print-dup LineString
   [geo writer]
-  (print-wkt :line-string geo writer))
+  (print-geo :line-string geo writer))
 
 (defmethod print-dup MultiLineString
   [geo writer]
-  (print-wkt :multi-line-string geo writer ))
+  (print-geo :multi-line-string geo writer ))
 
 (defmethod print-dup MultiPoint
   [geo writer]
-  (print-wkt :multi-point geo writer))
+  (print-geo :multi-point geo writer))
 
 (defmethod print-dup MultiPolygon
   [geo writer]
-  (print-wkt :multi-polygon geo writer))
+  (print-geo :multi-polygon geo writer))
 
 (defmethod print-dup Point
   [geo writer]
-  (print-wkt :point geo writer))
+  (print-geo :point geo writer))
 
 (defmethod print-dup Polygon
   [geo writer]
-  (print-wkt :polygon geo writer))
+  (print-geo :polygon geo writer))
 
 ;; PRINT-METHOD
 
 (defmethod print-method LineString
   [geo writer]
-  (print-wkt :line-string geo writer))
+  (print-geo :line-string geo writer))
 
 (defmethod print-method MultiLineString
   [geo writer]
-  (print-wkt :multi-line-string geo writer))
+  (print-geo :multi-line-string geo writer))
 
 (defmethod print-method MultiPoint
   [geo writer]
-  (print-wkt :multi-point geo writer))
+  (print-geo :multi-point geo writer))
 
 (defmethod print-method MultiPolygon
   [geo writer]
-  (print-wkt :multi-polygon geo writer))
+  (print-geo :multi-polygon geo writer))
 
 (defmethod print-method Point
   [geo writer]
-  (print-wkt :point geo writer))
+  (print-geo :point geo writer))
 
 (defmethod print-method Polygon
   [geo writer]
-  (print-wkt :polygon geo writer))
+  (print-geo :polygon geo writer))
 
 ;; READER
 
