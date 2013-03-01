@@ -11,7 +11,7 @@
   (point-z [point] "Returns the z coordinate of `point`."))
 
 (defprotocol IWellKnownText
-  (wkt [obj] "Returns `obj` as a WKT formatted string."))
+  (ewkt [obj] "Returns `obj` as a WKT formatted string."))
 
 (defn- format-position [p]
   (let [[x y z] p]
@@ -24,7 +24,7 @@
   (srid [geo]
     srid)
   IWellKnownText
-  (wkt [geo]
+  (ewkt [geo]
     (format "SRID=%s;LINESTRING(%s)" srid (join "," (map format-position coordinates)))))
 
 (defrecord MultiLineString [srid coordinates]
@@ -34,7 +34,7 @@
   (srid [geo]
     srid)
   IWellKnownText
-  (wkt [geo]
+  (ewkt [geo]
     (let [coordinates (map #(str "(" (join "," (map format-position %1)) ")") coordinates)]
       (format "SRID=%s;MULTILINESTRING(%s)" srid (join "," coordinates)))))
 
@@ -45,7 +45,7 @@
   (srid [geo]
     srid)
   IWellKnownText
-  (wkt [geo]
+  (ewkt [geo]
     (let [coordinates
           (map (fn [polygon]
                  (str "(" (join "," (map #(str "(" (join "," (map format-position %1)) ")") polygon)) ")"))
@@ -59,7 +59,7 @@
   (srid [geo]
     srid)
   IWellKnownText
-  (wkt [geo]
+  (ewkt [geo]
     (format "SRID=%s;MULTIPOINT(%s)" srid (join "," (map format-position coordinates)))))
 
 (defrecord Point [srid coordinates]
@@ -76,7 +76,7 @@
   (point-z [geo]
     (nth coordinates 2 nil))
   IWellKnownText
-  (wkt [geo]
+  (ewkt [geo]
     (format "SRID=%s;POINT%s" srid (seq coordinates))))
 
 (defrecord Polygon [srid coordinates]
@@ -86,7 +86,7 @@
   (srid [geo]
     srid)
   IWellKnownText
-  (wkt [geo]
+  (ewkt [geo]
     (let [coordinates (map #(str "(" (join "," (map format-position %1)) ")") coordinates)]
       (format "SRID=%s;POLYGON(%s)" srid (join "," coordinates)))))
 

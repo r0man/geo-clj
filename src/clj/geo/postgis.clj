@@ -55,25 +55,25 @@
 
 (extend-protocol core/IWellKnownText
   LineString
-  (wkt [geo]
+  (ewkt [geo]
     (str geo))
   LinearRing
-  (wkt [geo]
+  (ewkt [geo]
     (str geo))
   MultiLineString
-  (wkt [geo]
+  (ewkt [geo]
     (str geo))
   MultiPolygon
-  (wkt [geo]
+  (ewkt [geo]
     (str geo))
   MultiPoint
-  (wkt [geo]
+  (ewkt [geo]
     (str geo))
   Point
-  (wkt [geo]
+  (ewkt [geo]
     (str geo))
   Polygon
-  (wkt [geo]
+  (ewkt [geo]
     (str geo)))
 
 (defn point
