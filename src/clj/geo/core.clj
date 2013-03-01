@@ -25,7 +25,7 @@
     srid)
   IWellKnownText
   (ewkt [geo]
-    (format "SRID=%s;LINESTRING(%s)" srid (join "," (map format-position coordinates)))))
+    (format "SRID=%d;LINESTRING(%s)" srid (join "," (map format-position coordinates)))))
 
 (defrecord MultiLineString [srid coordinates]
   ICoordinate
@@ -36,7 +36,7 @@
   IWellKnownText
   (ewkt [geo]
     (let [coordinates (map #(str "(" (join "," (map format-position %1)) ")") coordinates)]
-      (format "SRID=%s;MULTILINESTRING(%s)" srid (join "," coordinates)))))
+      (format "SRID=%d;MULTILINESTRING(%s)" srid (join "," coordinates)))))
 
 (defrecord MultiPolygon [srid coordinates]
   ICoordinate
@@ -50,7 +50,7 @@
           (map (fn [polygon]
                  (str "(" (join "," (map #(str "(" (join "," (map format-position %1)) ")") polygon)) ")"))
                coordinates)]
-      (format "SRID=%s;MULTIPOLYGON(%s)" srid (join "," coordinates)))))
+      (format "SRID=%d;MULTIPOLYGON(%s)" srid (join "," coordinates)))))
 
 (defrecord MultiPoint [srid coordinates]
   ICoordinate
@@ -60,7 +60,7 @@
     srid)
   IWellKnownText
   (ewkt [geo]
-    (format "SRID=%s;MULTIPOINT(%s)" srid (join "," (map format-position coordinates)))))
+    (format "SRID=%d;MULTIPOINT(%s)" srid (join "," (map format-position coordinates)))))
 
 (defrecord Point [srid coordinates]
   ICoordinate
@@ -77,7 +77,7 @@
     (nth coordinates 2 nil))
   IWellKnownText
   (ewkt [geo]
-    (format "SRID=%s;POINT%s" srid (seq coordinates))))
+    (format "SRID=%d;POINT%s" srid (seq coordinates))))
 
 (defrecord Polygon [srid coordinates]
   ICoordinate
@@ -88,7 +88,7 @@
   IWellKnownText
   (ewkt [geo]
     (let [coordinates (map #(str "(" (join "," (map format-position %1)) ")") coordinates)]
-      (format "SRID=%s;POLYGON(%s)" srid (join "," coordinates)))))
+      (format "SRID=%d;POLYGON(%s)" srid (join "," coordinates)))))
 
 (defn point
   "Make a new Point."
