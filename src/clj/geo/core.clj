@@ -22,7 +22,7 @@
     coordinates)
   IWellKnownText
   (wkt [geo]
-    (str "LINESTRING(" (join ", " (map format-position coordinates)) ")")))
+    (str "LINESTRING(" (join "," (map format-position coordinates)) ")")))
 
 (defrecord MultiLineString [coordinates]
   ICoordinate
@@ -40,7 +40,7 @@
     coordinates)
   IWellKnownText
   (wkt [geo]
-    (str "MULTIPOINT(" (join ", " (map format-position coordinates)) ")")))
+    (str "MULTIPOINT(" (join "," (map format-position coordinates)) ")")))
 
 (defrecord Point [coordinates]
   ICoordinate
@@ -60,7 +60,10 @@
 (defrecord Polygon [coordinates]
   ICoordinate
   (coordinates [geo]
-    coordinates))
+    coordinates)
+  IWellKnownText
+  (wkt [geo]
+    (str "POLYGON(" (join "," (map (fn [c] (str "(" (join "," (map format-position c)) ")")) coordinates)) ")")))
 
 (defn point
   "Make a new Point."
@@ -76,6 +79,11 @@
   "Make a new MultiPoint."
   [& coordinates]
   (->MultiPoint coordinates))
+
+(defn polygon
+  "Make a new Polygon."
+  [& coordinates]
+  (->Polygon coordinates))
 
 (defn print-wkt
   "Print the geometric `obj` as `type` to `writer`."
