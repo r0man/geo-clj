@@ -18,6 +18,9 @@
   MultiLineString
   (coordinates [geo]
     (vec (map core/coordinates (.getLines geo))))
+  MultiPolygon
+  (coordinates [geo]
+    (vec (map core/coordinates (.getPolygons geo))))
   MultiPoint
   (coordinates [geo]
     (vec (map core/coordinates (.getPoints geo))))
@@ -95,6 +98,11 @@
   [& coordinates]
   (Polygon. (into-array LinearRing (map #(apply linear-ring %1) coordinates))))
 
+(defn multi-polygon
+  "Make a new MultiPolygon."
+  [& coordinates]
+  (MultiPolygon. (into-array Polygon (map #(apply polygon %1) coordinates))))
+
 ;; PRINT-DUP
 
 (defmethod print-method PGgeometry
@@ -165,6 +173,10 @@
   "Read a MultiPoint from `coordinates`."
   [coordinates] (apply multi-point coordinates))
 
+(defn read-multi-polygon
+  "Read a MultiPoint from `coordinates`."
+  [coordinates] (apply multi-polygon coordinates))
+
 (defn read-point
   "Read a Point from `coordinates`."
   [coordinates] (apply point coordinates))
@@ -176,6 +188,7 @@
 (def ^:dynamic *readers*
   {'geo/line-string read-line-string
    'geo/multi-line-string read-multi-line-string
+   'geo/multi-polygon read-multi-polygon
    'geo/multi-point read-multi-point
    'geo/point read-point
    'geo/polygon read-polygon})

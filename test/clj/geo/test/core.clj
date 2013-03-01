@@ -1,7 +1,6 @@
 (ns geo.test.core
-  (:use clojure.test
-        geo.core)
-  (:import [geo.core LineString MultiLineString MultiPoint Point Polygon]))
+  (:use clojure.test geo.core)
+  (:import [geo.core LineString MultiLineString MultiPoint MultiPolygon Point Polygon]))
 
 (deftest test-data-readers
   (binding  [*data-readers* (merge *data-readers* *readers*)]
@@ -10,6 +9,9 @@
          (line-string [30 10] [10 30] [40 40])
          (multi-line-string [[10 10] [20 20] [10 40]] [[40 40] [30 30] [40 20] [30 10]])
          (multi-point [10 40] [40 30] [20 20] [30 10])
+         (multi-polygon [[[40 40] [20 45] [45 30] [40 40]]]
+                        [[[20 35] [45 20] [30 5] [10 10] [10 30] [20 35]]
+                         [[30 20] [20 25] [20 15] [30 20]]])
          (point 30 10 0)
          (polygon [[30 10] [10 20] [20 40] [40 40] [30 10]]))))
 
@@ -35,6 +37,19 @@
     (is (instance? MultiPoint geo))
     (is (= [[10.0 40.0] [40.0 30.0] [20.0 20.0] [30.0 10.0]] (coordinates geo)))
     (is (= "MULTIPOINT(10.0 40.0,40.0 30.0,20.0 20.0,30.0 10.0)" (wkt geo)))))
+
+(deftest test-multi-polygon
+  (let [geo (multi-polygon
+             [[[40 40] [20 45] [45 30] [40 40]]]
+             [[[20 35] [45 20] [30 5] [10 10] [10 30] [20 35]]
+              [[30 20] [20 25] [20 15] [30 20]]])]
+    (is (instance? MultiPolygon geo))
+    (is (= [[[[40.0 40.0] [20.0 45.0] [45.0 30.0] [40.0 40.0]]]
+            [[[20.0 35.0] [45.0 20.0] [30.0 5.0] [10.0 10.0] [10.0 30.0] [20.0 35.0]]
+             [[30.0 20.0] [20.0 25.0] [20.0 15.0] [30.0 20.0]]]]
+           (coordinates geo)))
+    (is (= "MULTIPOLYGON(((40.0 40.0,20.0 45.0,45.0 30.0,40.0 40.0)),((20.0 35.0,45.0 20.0,30.0 5.0,10.0 10.0,10.0 30.0,20.0 35.0),(30.0 20.0,20.0 25.0,20.0 15.0,30.0 20.0)))"
+           (wkt geo)))))
 
 (deftest test-point
   (let [geo (point 30 10)]
@@ -80,6 +95,10 @@
        "#geo/multi-line-string[[[10.0 10.0] [20.0 20.0] [10.0 40.0]] [[40.0 40.0] [30.0 30.0] [40.0 20.0] [30.0 10.0]]]"
        (multi-point [10 40] [40 30] [20 20] [30 10])
        "#geo/multi-point[[10.0 40.0] [40.0 30.0] [20.0 20.0] [30.0 10.0]]"
+       (multi-polygon [[[40 40] [20 45] [45 30] [40 40]]]
+                      [[[20 35] [45 20] [30 5] [10 10] [10 30] [20 35]]
+                       [[30 20] [20 25] [20 15] [30 20]]])
+       "#geo/multi-polygon[[[[40.0 40.0] [20.0 45.0] [45.0 30.0] [40.0 40.0]]] [[[20.0 35.0] [45.0 20.0] [30.0 5.0] [10.0 10.0] [10.0 30.0] [20.0 35.0]] [[30.0 20.0] [20.0 25.0] [20.0 15.0] [30.0 20.0]]]]"
        (point 1 2)
        "#geo/point[1.0 2.0]"
        (polygon [[30 10] [10 20] [20 40] [40 40] [30 10]])

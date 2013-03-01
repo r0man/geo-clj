@@ -36,7 +36,14 @@
 (defrecord MultiPolygon [coordinates]
   ICoordinate
   (coordinates [geo]
-    coordinates))
+    coordinates)
+  IWellKnownText
+  (wkt [geo]
+    (let [coordinates
+          (map (fn [polygon]
+                 (str "(" (join "," (map #(str "(" (join "," (map format-position %1)) ")") polygon)) ")"))
+               coordinates)]
+      (str "MULTIPOLYGON(" (join "," coordinates) ")"))))
 
 (defrecord MultiPoint [coordinates]
   ICoordinate
@@ -94,6 +101,14 @@
   [& coordinates]
   (->MultiLineString
    (vec (map (fn [line] (vec (map #(vec (map float %1)) line)))
+             coordinates))))
+
+(defn multi-polygon
+  "Make a new MultiPolygon."
+  [& coordinates]
+  (->MultiPolygon
+   (vec (map (fn [polygon]
+               (vec (map (fn [ring] (vec (map #(vec (map float %1)) ring))) polygon)))
              coordinates))))
 
 (defn polygon
