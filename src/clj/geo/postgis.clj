@@ -1,9 +1,13 @@
 (ns geo.postgis
-  (:import [org.postgis PGgeometry LineString MultiLineString MultiPoint MultiPolygon Point])
+  (:import [org.postgis PGgeometry LineString LinearRing MultiLineString])
+  (:import [org.postgis MultiPoint MultiPolygon Point Polygon])
   (:require [geo.core :as core]))
 
 (extend-protocol core/ICoordinate
   LineString
+  (coordinates [geo]
+    (map core/coordinates (.getPoints geo)))
+  LinearRing
   (coordinates [geo]
     (map core/coordinates (.getPoints geo)))
   Point
@@ -13,7 +17,11 @@
       [(core/point-x geo) (core/point-y geo)]))
   MultiPoint
   (coordinates [geo]
-    (map core/coordinates (.getPoints geo))))
+    (map core/coordinates (.getPoints geo)))
+  Polygon
+  (coordinates [geo]
+    (for [n (range 0 (.numRings geo))]
+      (core/coordinates (.getRing geo n)))))
 
 (extend-type Point
   core/IPoint
@@ -29,6 +37,9 @@
   LineString
   (wkt [geo]
     (str geo))
+  LinearRing
+  (wkt [geo]
+    (str geo))
   MultiLineString
   (wkt [geo]
     (str geo))
@@ -39,6 +50,9 @@
   (wkt [geo]
     (str geo))
   Point
+  (wkt [geo]
+    (str geo))
+  Polygon
   (wkt [geo]
     (str geo)))
 
@@ -56,10 +70,20 @@
        (into-array Point)
        (LineString.)))
 
+(defn linear-ring
+  "Make a new LinearRing."
+  [& coordinates]
+  (LinearRing. (into-array Point (map #(apply point %1) coordinates))))
+
 (defn multi-point
   "Make a new MultiPoint."
   [& coordinates]
   (MultiPoint. (into-array Point (map #(apply point %1) coordinates))))
+
+(defn polygon
+  "Make a new Polygon."
+  [& coordinates]
+  (Polygon. (into-array LinearRing (map #(apply linear-ring %1) coordinates))))
 
 ;; PRINT-DUP
 
