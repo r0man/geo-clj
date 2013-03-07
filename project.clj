@@ -21,7 +21,7 @@
                 :source-paths ["test"]}
                {:compiler {:output-to "target/geo.js"
                            :optimizations :advanced
-                           :pretty-print true}
+                           :pretty-print false}
                 :source-paths ["src"]
                 :jar true}]
               :test-commands {"unit-tests" ["runners/phantomjs.js" "target/geo-test.js"]}})
