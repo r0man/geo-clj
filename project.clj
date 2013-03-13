@@ -7,7 +7,7 @@
             :url "http://www.eclipse.org/legal/epl-v10.html"}
   :dependencies [[org.clojure/clojure "1.5.0"]
                  [org.postgis/postgis-jdbc "1.3.3"]]
-  :profiles {:dev {:dependencies [[com.cemerick/clojurescript.test "0.0.1"]]}}
+  :profiles {:dev {:dependencies [[com.cemerick/clojurescript.test "0.0.2"]]}}
   :plugins [[lein-cljsbuild "0.3.0"]]
   :hooks [leiningen.cljsbuild]
   :cljsbuild {:builds
@@ -16,7 +16,7 @@
                            :pretty-print true}
                 :source-paths ["src"]}
                {:compiler {:output-to "target/geo-test.js"
-                           :optimizations :whitespace
+                           :optimizations :advanced
                            :pretty-print true}
                 :source-paths ["test"]}
                {:compiler {:output-to "target/geo.js"
