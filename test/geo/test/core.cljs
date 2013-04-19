@@ -1,9 +1,10 @@
 (ns geo.test.core
-  (:require-macros [cemerick.cljs.test :refer [is deftest with-test run-tests testing]])
+  (:require-macros [cemerick.cljs.test :refer [are is deftest with-test run-tests testing]])
   (:require [cemerick.cljs.test :as t]
             [cljs.reader :as reader]
             [geo.core :refer [coordinates ewkt line-string multi-line-string multi-point
                               multi-polygon polygon point point-x point-y point-z
+                              latitude? longitude?
                               LineString MultiLineString MultiPoint MultiPolygon Point Polygon]]))
 
 (deftest test-data-readers
@@ -92,3 +93,23 @@
 (deftest test-point-z
   (assert (nil? (point-z (point 4326 1 2))))
   (assert (= 3.0 (point-z (point 4326 1 2 3)))))
+
+(deftest test-latitude?
+  (testing "valid latitude coordinates"
+    (are [number]
+      (is (latitude? number))
+      -90 -90.0 0 90 90.0))
+  (testing "invalid latitude coordinates"
+    (are [number]
+      (is (not (latitude? number)))
+      nil "" -90.1 91 90.1 91)))
+
+(deftest test-longitude?
+  (testing "valid longitude coordinates"
+    (are [number]
+      (is (longitude? number))
+      -180 -180.0 0 180 180.0))
+  (testing "invalid longitude coordinates"
+    (are [number]
+      (is (not (longitude? number)))
+      nil "" -180.1 181 180.1 181)))

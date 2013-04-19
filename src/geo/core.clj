@@ -1,5 +1,6 @@
 (ns geo.core
-  (:require [clojure.string :refer [join]]))
+  (:require [clojure.string :refer [join]]
+            [inflections.util :refer [parse-double]]))
 
 (defprotocol ICoordinate
   (coordinates [obj] "Returns the coordinates of `obj`.")
@@ -16,6 +17,24 @@
 (defn- format-position [p]
   (let [[x y z] p]
     (str x " " y (if z (str " " z)))))
+
+(defn latitude?
+  "Returns true if `latitude` is a number and betweeen -90.0 and 90.0,
+  otherwise false."
+  [latitude]
+  (let [number (parse-double latitude)]
+    (and (number? number)
+         (>= number -90.0)
+         (<= number 90.0))))
+
+(defn longitude?
+  "Returns true if `longitude` is a number and between -180.0 and
+  180.0, otherwise false."
+  [longitude]
+  (let [number (parse-double longitude)]
+    (and (number? number)
+         (>= number -180.0)
+         (<= number 180.0))))
 
 (defrecord LineString [srid coordinates]
   ICoordinate
