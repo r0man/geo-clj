@@ -51,7 +51,9 @@
     (.getY geo))
   (point-z [geo]
     (if (= 3 (.getDimension geo))
-      (.getZ geo))))
+      (.getZ geo)))
+  (point? [_]
+    true))
 
 (extend-protocol core/IWellKnownText
   LineString

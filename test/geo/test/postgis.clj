@@ -1,7 +1,7 @@
 (ns geo.test.postgis
   (:import [org.postgis PGgeometry LineString LinearRing MultiLineString])
   (:import [org.postgis MultiPoint MultiPolygon Point Polygon])
-  (:require [geo.core :refer [coordinates ewkt point-x point-y point-z]])
+  (:require [geo.core :refer [coordinates ewkt point-x point-y point-z point?]])
   (:use clojure.test
         geo.postgis))
 
@@ -98,3 +98,7 @@
 (deftest test-point-z
   (is (nil? (point-z (point 4326 1 2))))
   (is (= 3.0 (point-z (point 4326 1 2 3)))))
+
+(deftest test-point?
+  (is (not (point? nil)))
+  (is (point? (point 4326 1 2))))

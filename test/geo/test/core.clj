@@ -91,6 +91,10 @@
   (is (nil? (point-z (point 4326 1 2))))
   (is (= 3.0 (point-z (point 4326 1 2 3)))))
 
+(deftest test-point?
+  (is (not (point? nil)))
+  (is (point? (point 4326 1 2))))
+
 (deftest test-latitude?
   (testing "valid latitude coordinates"
     (are [number]

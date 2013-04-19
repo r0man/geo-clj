@@ -3,7 +3,7 @@
   (:require [cemerick.cljs.test :as t]
             [cljs.reader :as reader]
             [geo.core :refer [coordinates ewkt line-string multi-line-string multi-point
-                              multi-polygon polygon point point-x point-y point-z
+                              multi-polygon polygon point point-x point-y point-z point?
                               latitude? longitude?
                               LineString MultiLineString MultiPoint MultiPolygon Point Polygon]]))
 
@@ -93,6 +93,10 @@
 (deftest test-point-z
   (assert (nil? (point-z (point 4326 1 2))))
   (assert (= 3.0 (point-z (point 4326 1 2 3)))))
+
+(deftest test-point?
+  (is (not (point? nil)))
+  (is (point? (point 4326 1 2))))
 
 (deftest test-latitude?
   (testing "valid latitude coordinates"

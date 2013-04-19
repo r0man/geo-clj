@@ -7,6 +7,7 @@
   (srid [obj] "Returns spatial reference system identifier `obj`."))
 
 (defprotocol IPoint
+  (point? [arg] "Returns true if `arg` is a point, otherwise false.")
   (point-x [point] "Returns the x coordinate of `point`.")
   (point-y [point] "Returns the y coordinate of `point`.")
   (point-z [point] "Returns the z coordinate of `point`."))
@@ -35,6 +36,12 @@
     (and (number? number)
          (>= number -180.0)
          (<= number 180.0))))
+
+(extend-protocol IPoint
+  nil
+  (point? [_] false)
+  Object
+  (point? [_] false))
 
 (defrecord LineString [srid coordinates]
   ICoordinate
@@ -94,6 +101,8 @@
     (nth coordinates 1))
   (point-z [geo]
     (nth coordinates 2 nil))
+  (point? [_]
+    true)
   IWellKnownText
   (ewkt [geo]
     (format "SRID=%d;POINT(%s)" srid (format-position coordinates))))
