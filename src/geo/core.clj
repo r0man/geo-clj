@@ -124,8 +124,8 @@
   (->Point
    srid
    (if z
-     [(float x) (float y) (float z)]
-     [(float x) (float y)])))
+     [(double x) (double y) (double z)]
+     [(double x) (double y)])))
 
 (defn line-string
   "Make a new LineString."
