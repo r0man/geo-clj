@@ -8,26 +8,28 @@
 (deftest test-data-readers
   (binding  [*data-readers* (merge *data-readers* *readers*)]
     (are [geo]
-         (is (= geo (read-string (pr-str geo))))
-         (line-string 4326 [30 10] [10 30] [40 40])
-         (multi-line-string 4326 [[10 10] [20 20] [10 40]] [[40 40] [30 30] [40 20] [30 10]])
-         (multi-polygon 4326 [[[40 40] [20 45] [45 30] [40 40]]] [[[20 35] [45 20] [30 5] [10 10] [10 30] [20 35]] [[30 20] [20 25] [20 15] [30 20]]])
-         (multi-point 4326 [10 40] [40 30] [20 20] [30 10])
-         (point 4326 30 10 0)
-         (polygon 4326 [[30 10] [10 20] [20 40] [40 40] [30 10]]))))
+      (is (= geo (read-string (pr-str geo))))
+      (line-string 4326 [30 10] [10 30] [40 40])
+      (multi-line-string 4326 [[10 10] [20 20] [10 40]] [[40 40] [30 30] [40 20] [30 10]])
+      (multi-polygon 4326 [[[40 40] [20 45] [45 30] [40 40]]] [[[20 35] [45 20] [30 5] [10 10] [10 30] [20 35]] [[30 20] [20 25] [20 15] [30 20]]])
+      (multi-point 4326 [10 40] [40 30] [20 20] [30 10])
+      (point 4326 30 10 0)
+      (polygon 4326 [[30 10] [10 20] [20 40] [40 40] [30 10]]))))
 
 (deftest test-line-string
   (let [geo (line-string 4326 [30 10] [10 30] [40 40])]
     (is (instance? LineString geo))
     (is (= [[30.0 10.0] [10.0 30.0] [40.0 40.0]] (coordinates geo)))
     (is (= "#geo/line-string[4326 [[30.0 10.0] [10.0 30.0] [40.0 40.0]]]" (pr-str geo)))
-    (is (= "SRID=4326;LINESTRING(30 10,10 30,40 40)" (ewkt geo)))))
+    (is (= "SRID=4326;LINESTRING(30 10,10 30,40 40)" (ewkt geo)))
+    (is (instance? PGgeometry (geometry geo)))))
 
 (deftest test-linear-ring
   (let [geo (linear-ring 4326 [30 10] [10 20] [20 40] [40 40] [30 10])]
     (is (instance? LinearRing geo))
     (is (= [[30.0 10.0] [10.0 20.0] [20.0 40.0] [40.0 40.0] [30.0 10.0]] (coordinates geo)))
-    (is (= "SRID=4326;(30 10,10 20,20 40,40 40,30 10)" (ewkt geo)))))
+    (is (= "SRID=4326;(30 10,10 20,20 40,40 40,30 10)" (ewkt geo)))
+    (is (instance? PGgeometry (geometry geo)))))
 
 (deftest test-multi-line-string
   (let [geo (multi-line-string 4326 [[10 10] [20 20] [10 40]] [[40 40] [30 30] [40 20] [30 10]])]
@@ -38,7 +40,8 @@
     (is (= "#geo/multi-line-string[4326 [[[10.0 10.0] [20.0 20.0] [10.0 40.0]] [[40.0 40.0] [30.0 30.0] [40.0 20.0] [30.0 10.0]]]]"
            (pr-str geo)))
     (is (= "SRID=4326;MULTILINESTRING((10 10,20 20,10 40),(40 40,30 30,40 20,30 10))"
-           (ewkt geo)))))
+           (ewkt geo)))
+    (is (instance? PGgeometry (geometry geo)))))
 
 (deftest test-multi-polygon
   (let [geo (multi-polygon 4326 [[[40 40] [20 45] [45 30] [40 40]]] [[[20 35] [45 20] [30 5] [10 10] [10 30] [20 35]] [[30 20] [20 25] [20 15] [30 20]]])]
@@ -50,26 +53,30 @@
     (is (= "#geo/multi-polygon[4326 [[[[40.0 40.0] [20.0 45.0] [45.0 30.0] [40.0 40.0]]] [[[20.0 35.0] [45.0 20.0] [30.0 5.0] [10.0 10.0] [10.0 30.0] [20.0 35.0]] [[30.0 20.0] [20.0 25.0] [20.0 15.0] [30.0 20.0]]]]]"
            (pr-str geo)))
     (is (= "SRID=4326;MULTIPOLYGON(((40 40,20 45,45 30,40 40)),((20 35,45 20,30 5,10 10,10 30,20 35),(30 20,20 25,20 15,30 20)))"
-           (ewkt geo)))))
+           (ewkt geo)))
+    (is (instance? PGgeometry (geometry geo)))))
 
 (deftest test-multi-point
   (let [geo (multi-point 4326 [10 40] [40 30] [20 20] [30 10])]
     (is (instance? MultiPoint geo))
     (is (= [[10.0 40.0] [40.0 30.0] [20.0 20.0] [30.0 10.0]] (coordinates geo)))
     (is (= "#geo/multi-point[4326 [[10.0 40.0] [40.0 30.0] [20.0 20.0] [30.0 10.0]]]" (pr-str geo)))
-    (is (= "SRID=4326;MULTIPOINT(10 40,40 30,20 20,30 10)" (ewkt geo)))))
+    (is (= "SRID=4326;MULTIPOINT(10 40,40 30,20 20,30 10)" (ewkt geo)))
+    (is (instance? PGgeometry (geometry geo)))))
 
 (deftest test-point
   (let [geo (point 4326 30 10)]
     (is (instance? Point geo))
     (is (= [30.0 10.0] (coordinates geo)))
     (is (= "#geo/point[4326 [30.0 10.0]]" (pr-str geo)))
-    (is (= "SRID=4326;POINT(30 10)" (ewkt geo))))
+    (is (= "SRID=4326;POINT(30 10)" (ewkt geo)))
+    (is (instance? PGgeometry (geometry geo))))
   (let [geo (point 4326 30 10 0)]
     (is (instance? Point geo))
     (is (= [30.0 10.0 0.0] (coordinates geo)))
     (is (= "#geo/point[4326 [30.0 10.0 0.0]]" (pr-str geo)))
-    (is (= "SRID=4326;POINT(30 10 0)" (ewkt geo)))))
+    (is (= "SRID=4326;POINT(30 10 0)" (ewkt geo)))
+    (is (instance? PGgeometry (geometry geo)))))
 
 (deftest test-polygon
   (let [geo (polygon 4326 [[30 10] [10 20] [20 40] [40 40] [30 10]])]

@@ -3,80 +3,8 @@
   (:import [org.postgis MultiPoint MultiPolygon Point Polygon])
   (:require [geo.core :as core]))
 
-(extend-protocol core/ICoordinate
-  LineString
-  (coordinates [geo]
-    (vec (map core/coordinates (.getPoints geo))))
-  (srid [geo]
-    (.getSrid geo))
-  LinearRing
-  (coordinates [geo]
-    (vec (map core/coordinates (.getPoints geo))))
-  (srid [geo]
-    (.getSrid geo))
-  Point
-  (coordinates [geo]
-    (if-let [z (core/point-z geo)]
-      [(core/point-x geo) (core/point-y geo) z]
-      [(core/point-x geo) (core/point-y geo)]))
-  (srid [geo]
-    (.getSrid geo))
-  MultiLineString
-  (coordinates [geo]
-    (vec (map core/coordinates (.getLines geo))))
-  (srid [geo]
-    (.getSrid geo))
-  MultiPolygon
-  (coordinates [geo]
-    (vec (map core/coordinates (.getPolygons geo))))
-  (srid [geo]
-    (.getSrid geo))
-  MultiPoint
-  (coordinates [geo]
-    (vec (map core/coordinates (.getPoints geo))))
-  (srid [geo]
-    (.getSrid geo))
-  Polygon
-  (coordinates [geo]
-    (vec (for [n (range 0 (.numRings geo))]
-           (core/coordinates (.getRing geo n)))))
-  (srid [geo]
-    (.getSrid geo)))
-
-(extend-type Point
-  core/IPoint
-  (point-x [geo]
-    (.getX geo))
-  (point-y [geo]
-    (.getY geo))
-  (point-z [geo]
-    (if (= 3 (.getDimension geo))
-      (.getZ geo)))
-  (point? [_]
-    true))
-
-(extend-protocol core/IWellKnownText
-  LineString
-  (ewkt [geo]
-    (str geo))
-  LinearRing
-  (ewkt [geo]
-    (str geo))
-  MultiLineString
-  (ewkt [geo]
-    (str geo))
-  MultiPolygon
-  (ewkt [geo]
-    (str geo))
-  MultiPoint
-  (ewkt [geo]
-    (str geo))
-  Point
-  (ewkt [geo]
-    (str geo))
-  Polygon
-  (ewkt [geo]
-    (str geo)))
+(defprotocol IGeometry
+  (geometry [obj] "Convert `obj` into a PostGIS geometry."))
 
 (defn point
   "Make a new Point."
@@ -214,3 +142,144 @@
    'geo/multi-polygon read-multi-polygon
    'geo/point read-point
    'geo/polygon read-polygon})
+
+;; POSTGIS TYPES
+
+(extend-type LineString
+  IGeometry
+  (geometry [geo]
+    (PGgeometry. geo))
+  core/ICoordinate
+  (coordinates [geo]
+    (vec (map core/coordinates (.getPoints geo))))
+  (srid [geo]
+    (.getSrid geo))
+  core/IWellKnownText
+  (ewkt [geo]
+    (str geo)))
+
+(extend-type LinearRing
+  IGeometry
+  (geometry [geo]
+    (PGgeometry. geo))
+  core/ICoordinate
+  (coordinates [geo]
+    (vec (map core/coordinates (.getPoints geo))))
+  (srid [geo]
+    (.getSrid geo))
+  core/IWellKnownText
+  (ewkt [geo]
+    (str geo)))
+
+(extend-type Point
+  IGeometry
+  (geometry [geo]
+    (PGgeometry. geo))
+  core/IPoint
+  (point-x [geo]
+    (.getX geo))
+  (point-y [geo]
+    (.getY geo))
+  (point-z [geo]
+    (if (= 3 (.getDimension geo))
+      (.getZ geo)))
+  (point? [_]
+    true)
+  core/ICoordinate
+  (coordinates [geo]
+    (if-let [z (core/point-z geo)]
+      [(core/point-x geo) (core/point-y geo) z]
+      [(core/point-x geo) (core/point-y geo)]))
+  (srid [geo]
+    (.getSrid geo))
+  core/IWellKnownText
+  (ewkt [geo]
+    (str geo)))
+
+(extend-type MultiLineString
+  IGeometry
+  (geometry [geo]
+    (PGgeometry. geo))
+  core/ICoordinate
+  (coordinates [geo]
+    (vec (map core/coordinates (.getLines geo))))
+  (srid [geo]
+    (.getSrid geo))
+  core/IWellKnownText
+  (ewkt [geo]
+    (str geo)))
+
+(extend-type MultiPolygon
+  IGeometry
+  (geometry [geo]
+    (PGgeometry. geo))
+  core/ICoordinate
+  (coordinates [geo]
+    (vec (map core/coordinates (.getPolygons geo))))
+  (srid [geo]
+    (.getSrid geo))
+  core/IWellKnownText
+  (ewkt [geo]
+    (str geo)))
+
+(extend-type MultiPoint
+  IGeometry
+  (geometry [geo]
+    (PGgeometry. geo))
+  core/ICoordinate
+  (coordinates [geo]
+    (vec (map core/coordinates (.getPoints geo))))
+  (srid [geo]
+    (.getSrid geo))
+  core/IWellKnownText
+  (ewkt [geo]
+    (str geo)))
+
+(extend-type Polygon
+  IGeometry
+  (geometry [geo]
+    (PGgeometry. geo))
+  core/ICoordinate
+  (coordinates [geo]
+    (vec (for [n (range 0 (.numRings geo))]
+           (core/coordinates (.getRing geo n)))))
+  (srid [geo]
+    (.getSrid geo))
+  core/IWellKnownText
+  (ewkt [geo]
+    (str geo)))
+
+;; CORE TYPES
+
+(defn- core-geom [f geo]
+  (geometry (apply f (core/srid geo) (core/coordinates geo))))
+
+(extend-type geo.core.LineString
+  IGeometry
+  (geometry [geo]
+    (core-geom line-string geo)))
+
+(extend-type geo.core.MultiLineString
+  IGeometry
+  (geometry [geo]
+    (core-geom multi-line-string geo)))
+
+(extend-type geo.core.MultiPolygon
+  IGeometry
+  (geometry [geo]
+    (core-geom multi-polygon geo)))
+
+(extend-type geo.core.MultiPoint
+  IGeometry
+  (geometry [geo]
+    (core-geom multi-point geo)))
+
+(extend-type geo.core.Point
+  IGeometry
+  (geometry [geo]
+    (core-geom point geo)))
+
+(extend-type geo.core.Polygon
+  IGeometry
+  (geometry [geo]
+    (core-geom polygon geo)))
