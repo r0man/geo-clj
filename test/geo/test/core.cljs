@@ -96,6 +96,7 @@
 
 (deftest test-point?
   (is (not (point? nil)))
+  (is (not (point? "")))
   (is (point? (point 4326 1 2))))
 
 (deftest test-latitude?

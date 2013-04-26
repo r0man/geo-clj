@@ -44,7 +44,7 @@
 (extend-protocol IPoint
   nil
   (point? [_] false)
-  object
+  default
   (point? [_] false))
 
 (defrecord LineString [srid coordinates]
