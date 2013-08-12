@@ -1,4 +1,4 @@
-(defproject geo-clj "0.2.7"
+(defproject geo-clj "0.2.8"
   :description "Geographic encoding/decoding for Clojure and ClojureScript."
   :url "http://github.com/r0man/geo-clj"
   :author "Roman Scherer"
@@ -7,9 +7,10 @@
             :url "http://www.eclipse.org/legal/epl-v10.html"}
   :dependencies [[inflections "0.8.1"]
                  [org.clojure/clojure "1.5.1"]
+                 [org.clojure/clojurescript "0.0-1853"]
                  [org.postgis/postgis-jdbc "1.3.3"]]
-  :profiles {:dev {:dependencies [[com.cemerick/clojurescript.test "0.0.3"]]}}
-  :plugins [[lein-cljsbuild "0.3.0"]]
+  :profiles {:dev {:dependencies [[com.cemerick/clojurescript.test "0.0.4"]]}}
+  :plugins [[lein-cljsbuild "0.3.2"]]
   :hooks [leiningen.cljsbuild]
   :cljsbuild {:builds
               [{:compiler {:output-to "target/geo-debug.js"

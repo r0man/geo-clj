@@ -16,9 +16,6 @@
 (defprotocol IWellKnownText
   (ewkt [obj] "Returns `obj` as a WKT formatted string."))
 
-(defn- float [s]
-  (js/parseFloat s))
-
 (defn- format-position [p]
   (let [[x y z] p]
     (str x " " y (if z (str " " z)))))
