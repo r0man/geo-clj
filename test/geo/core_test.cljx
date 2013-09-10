@@ -17,7 +17,7 @@
 ;;       (multi-line-string 4326 [[10 10] [20 20] [10 40]] [[40 40] [30 30] [40 20] [30 10]])
 ;;       (multi-point 4326 [10 40] [40 30] [20 20] [30 10])
 ;;       (multi-polygon 4326 [[[40 40] [20 45] [45 30] [40 40]]] [[[20 35] [45 20] [30 5] [10 10] [10 30] [20 35]] [[30 20] [20 25] [20 15] [30 20]]])
-;;       (point 4326 30 10 0)
+;;       (geo/point 4326 30 10 0)
 ;;       (polygon 4326 [[30 10] [10 20] [20 40] [40 40] [30 10]]))))
 
 (deftest test-line-string
@@ -64,13 +64,13 @@
 ;;            (ewkt geo)))))
 
 ;; (deftest test-point
-;;   (let [geo (point 4326 30 10)]
+;;   (let [geo (geo/point 4326 30 10)]
 ;;     (is (instance? Point geo))
 ;;     (is (instance? PGgeometry (geometry geo)))
 ;;     (is (= [30.0 10.0] (coordinates geo)))
 ;;     (is (= "#geo/point[4326 [30.0 10.0]]" (pr-str geo)))
 ;;     (is (= "SRID=4326;POINT(30.0 10.0)" (ewkt geo))))
-;;   (let [geo (point 4326 30 10 0)]
+;;   (let [geo (geo/point 4326 30 10 0)]
 ;;     (is (instance? Point geo))
 ;;     (is (instance? PGgeometry (geometry geo)))
 ;;     (is (= [30.0 10.0 0.0] (coordinates geo)))
@@ -98,20 +98,20 @@
 ;;     (is (= "SRID=4326;POLYGON((35.0 10.0,10.0 20.0,15.0 40.0,45.0 45.0,35.0 10.0),(20.0 30.0,35.0 35.0,30.0 20.0,20.0 30.0))"
 ;;            (ewkt geo)))))
 
-;; (deftest test-point-x
-;;   (is (= 1.0 (point-x (point 4326 1 2)))))
+(deftest test-point-x
+  (is (= 1.0 (geo/point-x (geo/point 4326 1 2)))))
 
-;; (deftest test-point-y
-;;   (is (= 2.0 (point-y (point 4326 1 2)))))
+(deftest test-point-y
+  (is (= 2.0 (geo/point-y (geo/point 4326 1 2)))))
 
-;; (deftest test-point-z
-;;   (is (nil? (point-z (point 4326 1 2))))
-;;   (is (= 3.0 (point-z (point 4326 1 2 3)))))
+(deftest test-point-z
+  (is (nil? (geo/point-z (geo/point 4326 1 2))))
+  (is (= 3.0 (geo/point-z (geo/point 4326 1 2 3)))))
 
 ;; (deftest test-point?
-;;   (is (not (point? nil)))
-;;   (is (not (point? "")))
-;;   (is (point? (point 4326 1 2))))
+;;   (is (not (geo/point? nil)))
+;;   (is (not (geo/point? "")))
+;;   (is (geo/point? (geo/point 4326 1 2))))
 
 ;; (deftest test-latitude?
 ;;   (testing "valid latitude coordinates"
@@ -152,7 +152,7 @@
 ;;                (multi-line-string 4326 [[10 10] [20 20] [10 40]] [[40 40] [30 30] [40 20] [30 10]])
 ;;                (multi-point 4326 [10 40] [40 30] [20 20] [30 10])
 ;;                (multi-polygon 4326 [[[40 40] [20 45] [45 30] [40 40]]] [[[20 35] [45 20] [30 5] [10 10] [10 30] [20 35]] [[30 20] [20 25] [20 15] [30 20]]])
-;;                (point 4326 30 10 0)
+;;                (geo/point 4326 30 10 0)
 ;;                (polygon 4326 [[30 10] [10 20] [20 40] [40 40] [30 10]])]]
 ;;     (is (= geo (reader/read-string (pr-str geo))))))
 
@@ -194,12 +194,12 @@
 ;;            (ewkt geo)))))
 
 ;; (deftest test-point
-;;   (let [geo (point 4326 30 10)]
+;;   (let [geo (geo/point 4326 30 10)]
 ;;     (is (instance? Point geo))
 ;;     (is (= [30.0 10.0] (coordinates geo)))
 ;;     (is (= "#geo/point[4326 [30 10]]" (pr-str geo)))
 ;;     (is (= "SRID=4326;POINT(30 10)" (ewkt geo))))
-;;   (let [geo (point 4326 30 10 0)]
+;;   (let [geo (geo/point 4326 30 10 0)]
 ;;     (is (instance? Point geo))
 ;;     (is (= [30.0 10.0 0.0] (coordinates geo)))
 ;;     (is (= "#geo/point[4326 [30 10 0]]" (pr-str geo)))
@@ -224,20 +224,10 @@
 ;;     (is (= "SRID=4326;POLYGON((35 10,10 20,15 40,45 45,35 10),(20 30,35 35,30 20,20 30))"
 ;;            (ewkt geo)))))
 
-;; (deftest test-point-x
-;;   (is (= 1.0 (point-x (point 4326 1 2)))))
-
-;; (deftest test-point-y
-;;   (is (= 2.0 (point-y (point 4326 1 2)))))
-
-;; (deftest test-point-z
-;;   (is (nil? (point-z (point 4326 1 2))))
-;;   (is (= 3.0 (point-z (point 4326 1 2 3)))))
-
 ;; (deftest test-point?
-;;   (is (not (point? nil)))
-;;   (is (not (point? "")))
-;;   (is (point? (point 4326 1 2))))
+;;   (is (not (geo/point? nil)))
+;;   (is (not (geo/point? "")))
+;;   (is (geo/point? (geo/point 4326 1 2))))
 
 ;; (deftest test-latitude?
 ;;   (testing "valid latitude coordinates"
