@@ -22,8 +22,6 @@
 
 (deftest test-line-string
   (let [geo (geo/line-string 4326 [30.0 10.0] [10.0 30.0] [40.0 40.0])]
-    ;; (is (instance? LineString geo))
-    ;; (is (instance? PGgeometry (geometry geo)))
     (is (= [[30.0 10.0] [10.0 30.0] [40.0 40.0]] (geo/coordinates geo)))
     (is (= #+clj "#geo/line-string[4326 [[30.0 10.0] [10.0 30.0] [40.0 40.0]]]"
            #+cljs "#geo/line-string[4326 [[30 10] [10 30] [40 40]]]"
@@ -34,8 +32,6 @@
 
 (deftest test-multi-line-string
   (let [geo (geo/multi-line-string 4326 [[10 10] [20 20] [10 40]] [[40 40] [30 30] [40 20] [30 10]])]
-    ;; (is (instance? MultiLineString geo))
-    ;; (is (instance? PGgeometry (geometry geo)))
     (is (= [[[10.0 10.0] [20.0 20.0] [10.0 40.0]]
             [[40.0 40.0] [30.0 30.0] [40.0 20.0] [30.0 10.0]]]
            (geo/coordinates geo)))
@@ -48,8 +44,6 @@
 
 (deftest test-multi-point
   (let [geo (geo/multi-point 4326 [10 40] [40 30] [20 20] [30 10])]
-    ;; (is (instance? MultiPoint geo))
-    ;; (is (instance? PGgeometry (geometry geo)))
     (is (= [[10.0 40.0] [40.0 30.0] [20.0 20.0] [30.0 10.0]] (geo/coordinates geo)))
     (is (= #+clj "#geo/multi-point[4326 [[10.0 40.0] [40.0 30.0] [20.0 20.0] [30.0 10.0]]]"
            #+cljs "#geo/multi-point[4326 [[10 40] [40 30] [20 20] [30 10]]]"
@@ -60,8 +54,6 @@
 
 (deftest test-multi-polygon
   (let [geo (geo/multi-polygon 4326 [[[40 40] [20 45] [45 30] [40 40]]] [[[20 35] [45 20] [30 5] [10 10] [10 30] [20 35]] [[30 20] [20 25] [20 15] [30 20]]])]
-    ;; (is (instance? MultiPolygon geo))
-    ;; (is (instance? PGgeometry (geometry geo)))
     (is (= [[[[40.0 40.0] [20.0 45.0] [45.0 30.0] [40.0 40.0]]]
             [[[20.0 35.0] [45.0 20.0] [30.0 5.0] [10.0 10.0] [10.0 30.0] [20.0 35.0]]
              [[30.0 20.0] [20.0 25.0] [20.0 15.0] [30.0 20.0]]]]
@@ -75,8 +67,6 @@
 
 (deftest test-point
   (let [geo (geo/point 4326 30 10)]
-    ;; (is (instance? Point geo))
-    ;; (is (instance? PGgeometry (geometry geo)))
     (is (= [30.0 10.0] (geo/coordinates geo)))
     (is (= #+clj "#geo/point[4326 [30.0 10.0]]"
            #+cljs "#geo/point[4326 [30 10]]"
@@ -85,8 +75,6 @@
            #+cljs "SRID=4326;POINT(30 10)"
            (geo/ewkt geo))))
   (let [geo (geo/point 4326 30 10 0)]
-    ;; (is (instance? Point geo))
-    ;; (is (instance? PGgeometry (geometry geo)))
     (is (= [30.0 10.0 0.0] (geo/coordinates geo)))
     (is (= #+clj "#geo/point[4326 [30.0 10.0 0.0]]"
            #+cljs "#geo/point[4326 [30 10 0]]"
@@ -97,8 +85,6 @@
 
 (deftest test-polygon
   (let [geo (geo/polygon 4326 [[30 10] [10 20] [20 40] [40 40] [30 10]])]
-    ;; (is (instance? Polygon geo))
-    ;; (is (instance? PGgeometry (geometry geo)))
     (is (= [[[30.0 10.0] [10.0 20.0] [20.0 40.0] [40.0 40.0] [30.0 10.0]]]
            (geo/coordinates geo)))
     (is (= #+clj "#geo/polygon[4326 [[[30.0 10.0] [10.0 20.0] [20.0 40.0] [40.0 40.0] [30.0 10.0]]]]"
@@ -109,8 +95,6 @@
            (geo/ewkt geo))))
   (let [geo (geo/polygon 4326 [[35 10] [10 20] [15 40] [45 45] [35 10]]
                          [[20 30] [35 35] [30 20] [20 30]])]
-    ;; (is (instance? Polygon geo))
-    ;; (is (instance? PGgeometry (geometry geo)))
     (is (= [[[35.0 10.0] [10.0 20.0] [15.0 40.0] [45.0 45.0] [35.0 10.0]]
             [[20.0 30.0] [35.0 35.0] [30.0 20.0] [20.0 30.0]]]
            (geo/coordinates geo)))
@@ -131,10 +115,10 @@
   (is (nil? (geo/point-z (geo/point 4326 1 2))))
   (is (= 3.0 (geo/point-z (geo/point 4326 1 2 3)))))
 
-;; (deftest test-point?
-;;   (is (not (geo/point? nil)))
-;;   (is (not (geo/point? "")))
-;;   (is (geo/point? (geo/point 4326 1 2))))
+(deftest test-point?
+  (is (not (geo/point? nil)))
+  (is (not (geo/point? "")))
+  (is (geo/point? (geo/point 4326 1 2))))
 
 (deftest test-latitude?
   (testing "valid latitude coordinates"

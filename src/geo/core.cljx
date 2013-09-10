@@ -40,7 +40,8 @@
 (extend-protocol IPoint
   nil
   (point? [_] false)
-  Object
+  #+clj Object
+  #+cljs default
   (point? [_] false))
 
 (defrecord LineString [srid coordinates]
