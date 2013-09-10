@@ -1,4 +1,4 @@
-(ns geo.test.postgis
+(ns geo.postgis-test
   (:import [org.postgis PGgeometry LineString LinearRing MultiLineString])
   (:import [org.postgis MultiPoint MultiPolygon Point Polygon])
   (:require [geo.core :refer [coordinates ewkt point-x point-y point-z point?]])

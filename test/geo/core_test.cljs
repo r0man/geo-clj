@@ -1,4 +1,4 @@
-(ns geo.test.core
+(ns geo.core-test
   (:require-macros [cemerick.cljs.test :refer [are is deftest with-test run-tests testing]])
   (:require [cemerick.cljs.test :as t]
             [cljs.reader :as reader]

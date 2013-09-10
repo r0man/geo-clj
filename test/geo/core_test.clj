@@ -1,4 +1,4 @@
-(ns geo.test.core
+(ns geo.core-test
   (:import org.postgis.PGgeometry )
   (:require [geo.postgis :refer [geometry]])
   (:use clojure.test geo.core)

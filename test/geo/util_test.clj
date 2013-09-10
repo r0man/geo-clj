@@ -1,4 +1,4 @@
-(ns geo.test.util
+(ns geo.util-test
   (:use clojure.test
         geo.util))
 
