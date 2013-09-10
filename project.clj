@@ -9,20 +9,29 @@
                  [org.clojure/clojure "1.5.1"]
                  [org.clojure/clojurescript "0.0-1853"]
                  [org.postgis/postgis-jdbc "1.3.3"]]
-  :profiles {:dev {:dependencies [[com.cemerick/clojurescript.test "0.0.4"]]}}
-  :plugins [[lein-cljsbuild "0.3.2"]]
-  :hooks [leiningen.cljsbuild]
-  :cljsbuild {:builds
-              [{:compiler {:output-to "target/geo-debug.js"
-                           :optimizations :whitespace
-                           :pretty-print true}
-                :source-paths ["src"]}
-               {:compiler {:output-to "target/geo-test.js"
-                           :optimizations :advanced
-                           :pretty-print true}
-                :source-paths ["test"]}
-               {:compiler {:output-to "target/geo.js"
-                           :optimizations :advanced
-                           :pretty-print false}
-                :source-paths ["src"]}]
-              :test-commands {"unit-tests" ["runners/phantomjs.js" "target/geo-test.js"]}})
+  :profiles {:dev {:dependencies [[com.cemerick/clojurescript.test "0.0.4"]
+                                  [com.keminglabs/cljx "0.3.0"]]
+                   :plugins [[com.cemerick/austin "0.1.1"]]
+                   :repl-options {:nrepl-middleware [cljx.repl-middleware/wrap-cljx]}}}
+  :plugins [[com.keminglabs/cljx "0.3.0"]
+            [lein-cljsbuild "0.3.2"]]
+  :hooks [cljx.hooks leiningen.cljsbuild]
+  :cljx {:builds [{:source-paths ["src"]
+                   :output-path "target/classes"
+                   :rules :clj}
+                  {:source-paths ["src"]
+                   :output-path "target/classes"
+                   :rules :cljs}
+                  {:source-paths ["test"]
+                   :output-path "target/test-classes"
+                   :rules :clj}
+                  {:source-paths ["test"]
+                   :output-path "target/test-classes"
+                   :rules :cljs}]}
+  :cljsbuild {:test-commands {"phantom" ["runners/phantomjs.js" "target/testable.js"]}
+              :builds [{:source-paths ["target/classes" "target/test-classes"]
+                        :compiler {:output-to "target/testable.js"
+                                   :libs [""]
+                                   :optimizations :advanced
+                                   :pretty-print true}}]}
+  :test-paths ["target/test-classes"])

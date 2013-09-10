@@ -17,7 +17,7 @@
 
 (defn- format-position [p]
   (let [[x y z] p]
-    (str x " " y (if z (str " " z)))))
+    (str (double x) " " (double y) (if z (str " " (double z))))))
 
 (defn latitude?
   "Returns true if `latitude` is a number and betweeen -90.0 and 90.0,
