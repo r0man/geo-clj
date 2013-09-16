@@ -7,14 +7,14 @@
             :url "http://www.eclipse.org/legal/epl-v10.html"}
   :dependencies [[inflections "0.8.1"]
                  [org.clojure/clojure "1.5.1"]
-                 [org.clojure/clojurescript "0.0-1853"]
+                 [org.clojure/clojurescript "0.0-1889"]
                  [org.postgis/postgis-jdbc "1.3.3"]]
   :profiles {:dev {:dependencies [[com.cemerick/clojurescript.test "0.0.4"]
                                   [com.keminglabs/cljx "0.3.0"]]
                    :plugins [[com.cemerick/austin "0.1.1"]]
                    :repl-options {:nrepl-middleware [cljx.repl-middleware/wrap-cljx]}}}
   :plugins [[com.keminglabs/cljx "0.3.0"]
-            [lein-cljsbuild "0.3.2"]]
+            [lein-cljsbuild "0.3.3"]]
   :hooks [cljx.hooks leiningen.cljsbuild]
   :cljx {:builds [{:source-paths ["src"]
                    :output-path "target/classes"
