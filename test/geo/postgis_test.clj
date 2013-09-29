@@ -109,3 +109,10 @@
 (deftest test-point?
   (is (not (point? nil)))
   (is (point? (point 4326 1 2))))
+
+(deftest test-parse-location
+  (is (nil? (parse-location "")))
+  (is (nil? (parse-location "x")))
+  (is (nil? (parse-location "x,y")))
+  (is (= (point 4326 2 1) (parse-location "1,2")))
+  (is (= (point 4326 2 1) (parse-location (point 4326 2 1)))))

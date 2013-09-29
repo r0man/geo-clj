@@ -5,7 +5,7 @@
   :min-lein-version "2.0.0"
   :license {:name "Eclipse Public License"
             :url "http://www.eclipse.org/legal/epl-v10.html"}
-  :dependencies [[inflections "0.8.1"]
+  :dependencies [[noencore "0.1.4-SNAPSHOT"]
                  [org.clojure/clojure "1.5.1"]
                  [org.clojure/clojurescript "0.0-1889"]
                  [org.postgis/postgis-jdbc "1.3.3"]]

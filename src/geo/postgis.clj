@@ -53,6 +53,13 @@
   (doto (MultiPolygon. (into-array Polygon (map #(apply polygon srid %1) coordinates)))
     (.setSrid (or srid -1))))
 
+(defn parse-location [s]
+  (if-let [p (core/parse-location s)]
+    (point (core/srid p)
+           (core/point-x p)
+           (core/point-y p)
+           (core/point-z p))))
+
 ;; PRINT-DUP
 
 (defmethod print-method PGgeometry

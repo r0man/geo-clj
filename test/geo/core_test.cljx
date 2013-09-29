@@ -144,3 +144,10 @@
     (are [number]
       (is (not (geo/longitude? number)))
       nil "" -180.1 181 180.1 181)))
+
+(deftest test-parse-location
+  (is (nil? (geo/parse-location "")))
+  (is (nil? (geo/parse-location "x")))
+  (is (nil? (geo/parse-location "x,y")))
+  (is (= (geo/point 4326 2 1) (geo/parse-location "1,2")))
+  (is (= (geo/point 4326 2 1) (geo/parse-location (geo/point 4326 2 1)))))

@@ -1,6 +1,6 @@
 (ns geo.core
-  (:require [clojure.string :refer [join]]
-            [inflections.util :refer [parse-double]]
+  (:require [clojure.string :refer [join split]]
+            [no.en.core :refer [parse-double]]
             #+cljs [cljs.reader :as reader]))
 
 (defprotocol ICoordinate
@@ -168,6 +168,14 @@
   (.write writer (str "#geo/" (name type) "[" (srid obj) " "))
   (.write writer (str (pr-str (coordinates obj)) "]")))
 
+(defn parse-location [s]
+  (if (point? s)
+    s (let [parts (->> (split s #"\s*,\s*")
+                       (map parse-double)
+                       (remove nil?))]
+        (if (= 2 (count parts))
+          (apply point 4326 (reverse parts))))))
+
 ;; PRINT-DUP
 
 #+clj
@@ -273,70 +281,6 @@
 
 #+cljs
 (register-tag-parsers!)
-
-;; (ns geo.core
-;;   (:require [clojure.string :refer [join]]
-;;             [cljs.reader :as reader]
-;;             [inflections.util :refer [parse-double]]))
-
-;; (defprotocol ICoordinate
-;;   (coordinates [obj] "Returns the coordinates of `obj`.")
-;;   (srid [obj] "Returns spatial reference system identifier `obj`."))
-
-;; (defprotocol IPoint
-;;   (point? [arg] "Returns true if `arg` is a point, otherwise false.")
-;;   (point-x [point] "Returns the x coordinate of `point`.")
-;;   (point-y [point] "Returns the y coordinate of `point`.")
-;;   (point-z [point] "Returns the z coordinate of `point`."))
-
-;; (defprotocol IWellKnownText
-;;   (ewkt [obj] "Returns `obj` as a WKT formatted string."))
-
-;; (defn- format-position [p]
-;;   (let [[x y z] p]
-;;     (str x " " y (if z (str " " z)))))
-
-
-;; (defn point
-;;   "Make a new Point."
-;;   [srid x y & [z]]
-;;   (->Point
-;;    srid
-;;    (if z
-;;      [(float x) (float y) (float z)]
-;;      [(float x) (float y)])))
-
-;; (defn line-string
-;;   "Make a new LineString."
-;;   [srid & coordinates]
-;;   (->LineString srid (vec (map #(vec (map float %1)) coordinates))))
-
-;; (defn multi-point
-;;   "Make a new MultiPoint."
-;;   [srid & coordinates]
-;;   (->MultiPoint srid (vec (map #(vec (map float %1)) coordinates))))
-
-;; (defn multi-line-string
-;;   "Make a new MultiLineString."
-;;   [srid & coordinates]
-;;   (->MultiLineString
-;;    srid (vec (map (fn [line] (vec (map #(vec (map float %1)) line)))
-;;                   coordinates))))
-
-;; (defn multi-polygon
-;;   "Make a new MultiPolygon."
-;;   [srid & coordinates]
-;;   (->MultiPolygon
-;;    srid (vec (map (fn [polygon]
-;;                     (vec (map (fn [ring] (vec (map #(vec (map float %1)) ring))) polygon)))
-;;                   coordinates))))
-
-;; (defn polygon
-;;   "Make a new Polygon."
-;;   [srid & coordinates]
-;;   (->Polygon
-;;    srid (vec (map (fn [ring] (vec (map #(vec (map float %1)) ring)))
-;;                   coordinates))))
 
 #+cljs
 (defn print-geo
