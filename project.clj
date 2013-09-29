@@ -34,4 +34,5 @@
                                    :libs [""]
                                    :optimizations :advanced
                                    :pretty-print true}}]}
-  :test-paths ["target/test-classes"])
+  :test-paths ["target/test-classes"]
+  :lein-release {:deploy-via :clojars})
