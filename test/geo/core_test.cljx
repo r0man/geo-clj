@@ -123,6 +123,7 @@
 (deftest test-point?
   (is (not (geo/point? nil)))
   (is (not (geo/point? "")))
+  (is (not (geo/point? "x")))
   (is (geo/point? (geo/point 4326 1 2))))
 
 (deftest test-latitude?

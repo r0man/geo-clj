@@ -41,6 +41,9 @@
 (extend-protocol IPoint
   nil
   (point? [_] false)
+  #+clj String
+  #+cljs string
+  (point? [_] false)
   #+clj Object
   #+cljs default
   (point? [_] false))
