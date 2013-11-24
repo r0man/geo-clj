@@ -17,8 +17,7 @@
 (defprotocol IWellKnownText
   (ewkt [obj] "Returns `obj` as a WKT formatted string."))
 
-;; (def earth-radius 6372.8)
-(def earth-radius 6371)
+(def earth-radius 6371.0)
 
 (def pi
   #+clj Math/PI
@@ -367,6 +366,41 @@
   (-pr-writer [geo writer opts]
     (print-geo :polygon geo writer)))
 
+(defn bearing-to
+  "Returns the (initial) bearing from `point-1` to the `point-2` in degrees."
+  [point-1 point-2]
+  (let [lat-1 (to-radian (point-y point-1))
+        lat-2 (to-radian (point-y point-2))
+        d-lon (to-radian (- (point-x point-2)
+                            (point-x point-1)))
+        y (* (sin d-lon) (cos lat-2))
+        x (- (* (cos lat-1) (sin lat-2))
+             (* (sin lat-1) (cos lat-2) (cos d-lon)))]
+    (mod (+ (to-degree (atan2 y x))
+            360)
+         360)))
+
+(defn destination-point
+  "Returns the destination point from `point` having travelled the
+  given `distance` (in km) on the given initial `bearing` (bearing may
+  vary before destination is reached)."
+  [point bearing distance]
+  (let [distance (/ distance earth-radius)
+        bearing (to-radian bearing)
+        lat-1 (to-radian (point-y point))
+        lon-1 (to-radian (point-x point))
+        lat-2 (asin (+ (* (sin lat-1) (cos distance))
+                       (* (cos lat-1) (sin distance) (cos bearing))))
+        lon-2 (+ lon-1 (atan2 (* (sin bearing) (sin distance) (cos lat-1))
+                              (* (- (cos distance)
+                                    (* (sin lat-1) (sin lat-2))))))]
+    (->Point (srid point)
+             [(to-degree (- (mod (+ lon-2 (* 3 pi))
+                                 (* 2 pi))
+                            pi))
+              (to-degree lat-2)])))
+
+
 (defn distance-to
   ".Returns the distance from `point-1` to `point-2`, in km using the
   Haversine formula."
@@ -386,23 +420,3 @@
                 (cos lat-1)
                 (cos lat-2)))]
     (* earth-radius 2 (asin (sqrt a)))))
-
-(defn destination-point
-  "Returns the destination point from `point` having travelled the
-  given distance (in km) on the given initial bearing (bearing may
-  vary before destination is reached)"
-  [point bearing distance]
-  (let [distance (/ distance earth-radius)
-        bearing (to-radian bearing)
-        lat-1 (to-radian (point-y point))
-        lon-1 (to-radian (point-x point))
-        lat-2 (asin (+ (* (sin lat-1) (cos distance))
-                       (* (cos lat-1) (sin distance) (cos bearing))))
-        lon-2 (+ lon-1 (atan2 (* (sin bearing) (sin distance) (cos lat-1))
-                              (* (- (cos distance)
-                                    (* (sin lat-1) (sin lat-2))))))]
-    (->Point (srid point)
-             [(to-degree (- (mod (+ lon-2 (* 3 pi))
-                                 (* 2 pi))
-                            pi))
-              (to-degree lat-2)])))

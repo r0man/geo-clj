@@ -184,6 +184,18 @@
     0 0.0
     1 0.017453292519943295))
 
+(deftest test-bearing-to
+  (are [point-1 point-2 expected]
+    (is (= expected (geo/bearing-to point-1 point-2)))
+    (geo/point 4326 -0.0983 51.5136) (geo/point 4326 -0.0983 51.5136) 0.0
+    (geo/point 4326 -0.0983 51.5136) (geo/point 4326 -0.0015 51.4778) #+clj 120.67420693455387 #+cljs 120.67420693455165))
+
+(deftest test-destination-point
+  (are [point bearing distance expected]
+    (is (= expected (geo/destination-point point bearing distance)))
+    (geo/point 4326 -0.0983 51.5136) 0 0 (geo/point 4326 -0.09829999999998931 51.5136)
+    (geo/point 4326 -0.0983 51.5136) 120.67420693455165 7.794 (geo/point 4326 -0.0015046755432425007 51.47780173246189)))
+
 (deftest test-distance-to
   (are [point-1 point-2 expected]
     (let [[x1 y1] point-1
@@ -192,9 +204,3 @@
     [-0.0983 51.5136] [-0.0983 51.5136] 0.0
     [-0.0983 51.5136] [-0.0015 51.4778] 7.794376772579707
     [-0.0015 51.4778] [-0.0983 51.5136] 7.794376772579707))
-
-(deftest test-destination-point
-  (are [point bearing distance expected]
-    (is (= expected (geo/destination-point point bearing distance)))
-    (geo/point 4326 -0.0983 51.5136) 0 0 (geo/point 4326 -0.09829999999998931 51.5136)
-    (geo/point 4326 -0.0983 51.5136) 120.67420693455165 7.794 (geo/point 4326 -0.0015046755432425007 51.47780173246189)))
