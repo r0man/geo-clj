@@ -184,11 +184,17 @@
     0 0.0
     1 0.017453292519943295))
 
-(deftest test-haversine
+(deftest test-distance-to
   (are [point-1 point-2 expected]
     (let [[x1 y1] point-1
           [x2 y2] point-2]
-      (is (= expected (geo/haversine (geo/point 4326 x1 y1) (geo/point 4326 x2 y2)))))
-    [-86.67 36.12] [-86.67 36.12] 0.0
-    [-86.67 36.12] [-118.40 33.94] 2887.2599506071106
-    [-118.40 33.94] [-86.67 36.12] 2887.2599506071106))
+      (is (= expected (geo/distance-to (geo/point 4326 x1 y1) (geo/point 4326 x2 y2)))))
+    [-0.0983 51.5136] [-0.0983 51.5136] 0.0
+    [-0.0983 51.5136] [-0.0015 51.4778] 7.794376772579707
+    [-0.0015 51.4778] [-0.0983 51.5136] 7.794376772579707))
+
+(deftest test-destination-point
+  (are [point bearing distance expected]
+    (is (= expected (geo/destination-point point bearing distance)))
+    (geo/point 4326 -0.0983 51.5136) 0 0 (geo/point 4326 -0.09829999999998931 51.5136)
+    (geo/point 4326 -0.0983 51.5136) 120.67420693455165 7.794 (geo/point 4326 -0.0015046755432425007 51.47780173246189)))

@@ -17,7 +17,19 @@
 (defprotocol IWellKnownText
   (ewkt [obj] "Returns `obj` as a WKT formatted string."))
 
-(def earth-radius 6372.8)
+;; (def earth-radius 6372.8)
+(def earth-radius 6371)
+
+(def pi
+  #+clj Math/PI
+  #+cljs js/Math.PI)
+
+(defn to-degree
+  "Converts an angle measured in degrees to an approximately
+  equivalent angle measured in degrees."
+  [x]
+  #+clj (Math/toDegrees x)
+  #+cljs (math/toDegrees x))
 
 (defn to-radian
   "Converts an angle measured in degrees to an approximately
@@ -31,6 +43,12 @@
   [x]
   #+clj (Math/asin x)
   #+cljs (.asin js/Math x))
+
+(defn atan2
+  "Returns the arc sine of `x`."
+  [y x]
+  #+clj (Math/atan2 y x)
+  #+cljs (.atan2 js/Math y x))
 
 (defn sin
   "Returns the sine of `x`."
@@ -349,8 +367,9 @@
   (-pr-writer [geo writer opts]
     (print-geo :polygon geo writer)))
 
-(defn haversine
-  "Returns the great circle distance in km between `point-1` and `point-2`."
+(defn distance-to
+  ".Returns the distance from `point-1` to `point-2`, in km using the
+  Haversine formula."
   [point-1 point-2]
   (let [lon-1 (point-x point-1)
         lon-2 (point-x point-2)
@@ -367,3 +386,23 @@
                 (cos lat-1)
                 (cos lat-2)))]
     (* earth-radius 2 (asin (sqrt a)))))
+
+(defn destination-point
+  "Returns the destination point from `point` having travelled the
+  given distance (in km) on the given initial bearing (bearing may
+  vary before destination is reached)"
+  [point bearing distance]
+  (let [distance (/ distance earth-radius)
+        bearing (to-radian bearing)
+        lat-1 (to-radian (point-y point))
+        lon-1 (to-radian (point-x point))
+        lat-2 (asin (+ (* (sin lat-1) (cos distance))
+                       (* (cos lat-1) (sin distance) (cos bearing))))
+        lon-2 (+ lon-1 (atan2 (* (sin bearing) (sin distance) (cos lat-1))
+                              (* (- (cos distance)
+                                    (* (sin lat-1) (sin lat-2))))))]
+    (->Point (srid point)
+             [(to-degree (- (mod (+ lon-2 (* 3 pi))
+                                 (* 2 pi))
+                            pi))
+              (to-degree lat-2)])))
