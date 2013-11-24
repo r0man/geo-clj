@@ -420,3 +420,19 @@
                 (cos lat-1)
                 (cos lat-2)))]
     (* earth-radius 2 (asin (sqrt a)))))
+
+(defn final-bearing-to
+  "Returns final bearing arriving at destination `point-2` from
+  `point-1`. The final bearing will differ from the initial bearing by
+  varying degrees according to distance and latitude."
+  [point-1 point-2]
+  (let [lat-1 (to-radian (point-y point-2))
+        lat-2 (to-radian (point-y point-1))
+        d-lon (to-radian (- (point-x point-1)
+                            (point-x point-2)))
+        y (* (sin d-lon) (cos lat-2))
+        x (- (* (cos lat-1) (sin lat-2))
+             (* (sin lat-1) (cos lat-2) (cos d-lon)))]
+    (mod (+ (to-degree (atan2 y x))
+            180)
+         360)))
