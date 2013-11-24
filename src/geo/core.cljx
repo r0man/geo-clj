@@ -23,14 +23,14 @@
   #+clj Math/PI
   #+cljs js/Math.PI)
 
-(defn to-degree
+(defn to-degrees
   "Converts an angle measured in degrees to an approximately
   equivalent angle measured in degrees."
   [x]
   #+clj (Math/toDegrees x)
   #+cljs (math/toDegrees x))
 
-(defn to-radian
+(defn to-radians
   "Converts an angle measured in degrees to an approximately
   equivalent angle measured in radians."
   [x]
@@ -369,14 +369,14 @@
 (defn bearing-to
   "Returns the (initial) bearing from `point-1` to the `point-2` in degrees."
   [point-1 point-2]
-  (let [lat-1 (to-radian (point-y point-1))
-        lat-2 (to-radian (point-y point-2))
-        d-lon (to-radian (- (point-x point-2)
-                            (point-x point-1)))
+  (let [lat-1 (to-radians (point-y point-1))
+        lat-2 (to-radians (point-y point-2))
+        d-lon (to-radians (- (point-x point-2)
+                             (point-x point-1)))
         y (* (sin d-lon) (cos lat-2))
         x (- (* (cos lat-1) (sin lat-2))
              (* (sin lat-1) (cos lat-2) (cos d-lon)))]
-    (mod (+ (to-degree (atan2 y x))
+    (mod (+ (to-degrees (atan2 y x))
             360)
          360)))
 
@@ -386,19 +386,19 @@
   vary before destination is reached)."
   [point bearing distance]
   (let [distance (/ distance earth-radius)
-        bearing (to-radian bearing)
-        lat-1 (to-radian (point-y point))
-        lon-1 (to-radian (point-x point))
+        bearing (to-radians bearing)
+        lat-1 (to-radians (point-y point))
+        lon-1 (to-radians (point-x point))
         lat-2 (asin (+ (* (sin lat-1) (cos distance))
                        (* (cos lat-1) (sin distance) (cos bearing))))
         lon-2 (+ lon-1 (atan2 (* (sin bearing) (sin distance) (cos lat-1))
                               (* (- (cos distance)
                                     (* (sin lat-1) (sin lat-2))))))]
     (->Point (srid point)
-             [(to-degree (- (mod (+ lon-2 (* 3 pi))
-                                 (* 2 pi))
-                            pi))
-              (to-degree lat-2)])))
+             [(to-degrees (- (mod (+ lon-2 (* 3 pi))
+                                  (* 2 pi))
+                             pi))
+              (to-degrees lat-2)])))
 
 
 (defn distance-to
@@ -409,10 +409,10 @@
         lon-2 (point-x point-2)
         lat-1 (point-y point-1)
         lat-2 (point-y point-2)
-        d-lat (to-radian (- lat-2 lat-1))
-        d-lon (to-radian (- lon-2 lon-1))
-        lat-1 (to-radian lat-1)
-        lat-2 (to-radian lat-2)
+        d-lat (to-radians (- lat-2 lat-1))
+        d-lon (to-radians (- lon-2 lon-1))
+        lat-1 (to-radians lat-1)
+        lat-2 (to-radians lat-2)
         a (+ (* (sin (/ d-lat 2))
                 (sin (/ d-lat 2)))
              (* (sin (/ d-lon 2))
@@ -426,13 +426,13 @@
   `point-1`. The final bearing will differ from the initial bearing by
   varying degrees according to distance and latitude."
   [point-1 point-2]
-  (let [lat-1 (to-radian (point-y point-2))
-        lat-2 (to-radian (point-y point-1))
-        d-lon (to-radian (- (point-x point-1)
-                            (point-x point-2)))
+  (let [lat-1 (to-radians (point-y point-2))
+        lat-2 (to-radians (point-y point-1))
+        d-lon (to-radians (- (point-x point-1)
+                             (point-x point-2)))
         y (* (sin d-lon) (cos lat-2))
         x (- (* (cos lat-1) (sin lat-2))
              (* (sin lat-1) (cos lat-2) (cos d-lon)))]
-    (mod (+ (to-degree (atan2 y x))
+    (mod (+ (to-degrees (atan2 y x))
             180)
          360)))

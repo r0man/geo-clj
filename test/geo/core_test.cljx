@@ -178,9 +178,9 @@
     1 1.0
     4 2.0))
 
-(deftest test-to-radian
+(deftest test-to-radians
   (are [x expected]
-    (is (= expected (geo/to-radian x)))
+    (is (= expected (geo/to-radians x)))
     0 0.0
     1 0.017453292519943295))
 
