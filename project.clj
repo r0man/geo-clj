@@ -12,7 +12,7 @@
                  [org.postgis/postgis-jdbc "1.3.3"]]
   :profiles {:dev {:dependencies [[com.keminglabs/cljx "0.3.1"]]
                    :plugins [[com.cemerick/austin "0.1.1"]
-                             [com.cemerick/clojurescript.test "0.2.0"]]
+                             [com.cemerick/clojurescript.test "0.2.1"]]
                    :repl-options {:nrepl-middleware [cljx.repl-middleware/wrap-cljx]}}}
   :plugins [[com.keminglabs/cljx "0.3.1"]
             [lein-cljsbuild "1.0.0"]]
