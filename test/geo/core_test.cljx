@@ -152,3 +152,43 @@
   (is (nil? (geo/parse-location "x,y")))
   (is (= (geo/point 4326 2 1) (geo/parse-location "1,2")))
   (is (= (geo/point 4326 2 1) (geo/parse-location (geo/point 4326 2 1)))))
+
+(deftest test-asin
+  (are [x expected]
+    (is (= expected (geo/asin x)))
+    0 0.0
+    1 1.5707963267948966))
+
+(deftest test-sin
+  (are [x expected]
+    (is (= expected (geo/sin x)))
+    0 0.0
+    1 0.8414709848078965))
+
+(deftest test-cos
+  (are [x expected]
+    (is (= expected (geo/cos x)))
+    0 1.0
+    1 0.5403023058681398))
+
+(deftest test-sqrt
+  (are [x expected]
+    (is (= expected (geo/sqrt x)))
+    0 0.0
+    1 1.0
+    4 2.0))
+
+(deftest test-to-radian
+  (are [x expected]
+    (is (= expected (geo/to-radian x)))
+    0 0.0
+    1 0.017453292519943295))
+
+(deftest test-haversine
+  (are [point-1 point-2 expected]
+    (let [[x1 y1] point-1
+          [x2 y2] point-2]
+      (is (= expected (geo/haversine (geo/point 4326 x1 y1) (geo/point 4326 x2 y2)))))
+    [-86.67 36.12] [-86.67 36.12] 0.0
+    [-86.67 36.12] [-118.40 33.94] 2887.2599506071106
+    [-118.40 33.94] [-86.67 36.12] 2887.2599506071106))

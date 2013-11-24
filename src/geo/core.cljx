@@ -1,7 +1,8 @@
 (ns geo.core
   (:require [clojure.string :refer [join split]]
             [no.en.core :refer [parse-double]]
-            #+cljs [cljs.reader :as reader]))
+            #+cljs [cljs.reader :as reader]
+            #+cljs [goog.math :as math]))
 
 (defprotocol ICoordinate
   (coordinates [obj] "Returns the coordinates of `obj`.")
@@ -15,6 +16,39 @@
 
 (defprotocol IWellKnownText
   (ewkt [obj] "Returns `obj` as a WKT formatted string."))
+
+(def earth-radius 6372.8)
+
+(defn to-radian
+  "Converts an angle measured in degrees to an approximately
+  equivalent angle measured in radians."
+  [x]
+  #+clj (Math/toRadians x)
+  #+cljs (math/toRadians x))
+
+(defn asin
+  "Returns the arc sine of `x`."
+  [x]
+  #+clj (Math/asin x)
+  #+cljs (.asin js/Math x))
+
+(defn sin
+  "Returns the sine of `x`."
+  [x]
+  #+clj (Math/sin x)
+  #+cljs (.sin js/Math x))
+
+(defn cos
+  "Returns the cosine of `x`."
+  [x]
+  #+clj (Math/cos x)
+  #+cljs (.cos js/Math x))
+
+(defn sqrt
+  "Returns the square root of `x`."
+  [x]
+  #+clj (Math/sqrt x)
+  #+cljs (.sqrt js/Math x))
 
 (defn- format-position [p]
   (let [[x y z] p]
@@ -314,3 +348,22 @@
   Polygon
   (-pr-writer [geo writer opts]
     (print-geo :polygon geo writer)))
+
+(defn haversine
+  "Returns the great circle distance in km between `point-1` and `point-2`."
+  [point-1 point-2]
+  (let [lon-1 (point-x point-1)
+        lon-2 (point-x point-2)
+        lat-1 (point-y point-1)
+        lat-2 (point-y point-2)
+        d-lat (to-radian (- lat-2 lat-1))
+        d-lon (to-radian (- lon-2 lon-1))
+        lat-1 (to-radian lat-1)
+        lat-2 (to-radian lat-2)
+        a (+ (* (sin (/ d-lat 2))
+                (sin (/ d-lat 2)))
+             (* (sin (/ d-lon 2))
+                (sin (/ d-lon 2))
+                (cos lat-1)
+                (cos lat-2)))]
+    (* earth-radius 2 (asin (sqrt a)))))
