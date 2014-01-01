@@ -436,3 +436,13 @@
     (mod (+ (to-degrees (atan2 y x))
             180)
          360)))
+
+(defn bounding-box [point distance]
+  (let [north (destination-point point 0 distance)
+        east (destination-point point 90 distance)
+        south (destination-point point 180 distance)
+        west (destination-point point 270 distance)]
+    [(->Point (srid point) [(point-x west) (point-y south)])
+     (->Point (srid point) [(point-x east) (point-y north)])]))
+
+;; (bounding-box (point 4326 -0.0983 51.5136) 1)
