@@ -6,16 +6,16 @@
   :license {:name "Eclipse Public License"
             :url "http://www.eclipse.org/legal/epl-v10.html"}
   :lein-release {:deploy-via :clojars}
-  :dependencies [[noencore "0.1.9"]
+  :dependencies [[noencore "0.1.10"]
                  [org.clojure/clojure "1.5.1"]
-                 [org.clojure/clojurescript "0.0-2080"]
+                 [org.clojure/clojurescript "0.0-2138"]
                  [org.postgis/postgis-jdbc "1.3.3"]]
-  :profiles {:dev {:dependencies [[com.keminglabs/cljx "0.3.1"]]
+  :profiles {:dev {:dependencies [[com.keminglabs/cljx "0.3.2"]]
                    :plugins [[com.cemerick/austin "0.1.1"]
                              [com.cemerick/clojurescript.test "0.2.1"]]
                    :repl-options {:nrepl-middleware [cljx.repl-middleware/wrap-cljx]}}}
-  :plugins [[com.keminglabs/cljx "0.3.1"]
-            [lein-cljsbuild "1.0.0"]]
+  :plugins [[com.keminglabs/cljx "0.3.2"]
+            [lein-cljsbuild "1.0.1"]]
   :hooks [cljx.hooks leiningen.cljsbuild]
   :cljx {:builds [{:source-paths ["src"]
                    :output-path "target/classes"
