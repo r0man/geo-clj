@@ -9,7 +9,6 @@
   (srid [obj] "Returns spatial reference system identifier `obj`."))
 
 (defprotocol IPoint
-  (point? [arg] "Returns true if `arg` is a point, otherwise false.")
   (point-x [point] "Returns the x coordinate of `point`.")
   (point-y [point] "Returns the y coordinate of `point`.")
   (point-z [point] "Returns the z coordinate of `point`."))
@@ -89,16 +88,6 @@
          (>= number -180.0)
          (<= number 180.0))))
 
-(extend-protocol IPoint
-  nil
-  (point? [_] false)
-  #+clj String
-  #+cljs string
-  (point? [_] false)
-  #+clj Object
-  #+cljs default
-  (point? [_] false))
-
 (defrecord LineString [srid coordinates]
   ICoordinate
   (coordinates [geo]
@@ -157,8 +146,6 @@
     (nth coordinates 1))
   (point-z [geo]
     (nth coordinates 2 nil))
-  (point? [_]
-    true)
   IWellKnownText
   (ewkt [geo]
     (str "SRID=" srid ";POINT(" (format-position coordinates) ")")))
@@ -182,6 +169,9 @@
    (if z
      [(double x) (double y) (double z)]
      [(double x) (double y)])))
+
+(defn point?
+  [x] (satisfies? IPoint x))
 
 (defn line-string
   "Make a new LineString."
@@ -224,7 +214,7 @@
 
 (defn parse-location [s]
   (if (point? s)
-    s (let [parts (->> (split s #"\s*,\s*")
+    s (let [parts (->> (split (str s) #"\s*,\s*")
                        (map parse-double)
                        (remove nil?))]
         (if (= 2 (count parts))
@@ -444,5 +434,3 @@
         west (destination-point point 270 distance)]
     [(->Point (srid point) [(point-x west) (point-y south)])
      (->Point (srid point) [(point-x east) (point-y north)])]))
-
-;; (bounding-box (point 4326 -0.0983 51.5136) 1)
