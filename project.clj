@@ -6,7 +6,7 @@
   :license {:name "Eclipse Public License"
             :url "http://www.eclipse.org/legal/epl-v10.html"}
   :lein-release {:deploy-via :clojars}
-  :dependencies [[noencore "0.1.10"]
+  :dependencies [[noencore "0.1.11"]
                  [org.clojure/clojure "1.5.1"]
                  [org.clojure/clojurescript "0.0-2138"]
                  [org.postgis/postgis-jdbc "1.3.3"]]
