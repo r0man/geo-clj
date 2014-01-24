@@ -15,7 +15,7 @@
                    :plugins [[com.keminglabs/cljx "0.3.2"] ;; Must be before Austin: https://github.com/cemerick/austin/issues/37
                              [lein-cljsbuild "1.0.1"]
                              [com.cemerick/austin "0.1.1"]
-                             [com.cemerick/clojurescript.test "0.2.1"]]
+                             [com.cemerick/clojurescript.test "0.2.2-SNAPSHOT"]]
                    :hooks [cljx.hooks leiningen.cljsbuild]
                    :cljx {:builds [{:source-paths ["src"]
                                     :output-path "target/classes"
@@ -29,7 +29,8 @@
                                    {:source-paths ["test"]
                                     :output-path "target/test-classes"
                                     :rules :cljs}]}
-                   :cljsbuild {:test-commands {"phantom" ["phantomjs" :runner "target/testable.js"]}
+                   :cljsbuild {:test-commands {"node" ["node" :node-runner "target/testable.js"]
+                                               "phantom" ["phantomjs" :runner "target/testable.js"]}
                                :builds [{:source-paths ["target/classes" "target/test-classes"]
                                          :compiler {:output-to "target/testable.js"
                                                     :optimizations :advanced
