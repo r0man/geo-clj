@@ -111,12 +111,15 @@
            (geo/ewkt geo)))))
 
 (deftest test-point-x
+  (is (nil? (geo/point-x nil)))
   (is (= 1.0 (geo/point-x (geo/point 4326 1 2)))))
 
 (deftest test-point-y
+  (is (nil? (geo/point-y nil)))
   (is (= 2.0 (geo/point-y (geo/point 4326 1 2)))))
 
 (deftest test-point-z
+  (is (nil? (geo/point-z nil)))
   (is (nil? (geo/point-z (geo/point 4326 1 2))))
   (is (= 3.0 (geo/point-z (geo/point 4326 1 2 3)))))
 

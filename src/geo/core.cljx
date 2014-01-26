@@ -150,6 +150,12 @@
   (ewkt [geo]
     (str "SRID=" srid ";POINT(" (format-position coordinates) ")")))
 
+(extend-protocol IPoint
+  nil
+  (point-x [_] nil)
+  (point-y [_] nil)
+  (point-z [_] nil))
+
 (defrecord Polygon [srid coordinates]
   ICoordinate
   (coordinates [geo]
@@ -171,7 +177,9 @@
      [(double x) (double y)])))
 
 (defn point?
-  [x] (satisfies? IPoint x))
+  [x]
+  (and (not (nil? x))
+       (satisfies? IPoint x)))
 
 (defn line-string
   "Make a new LineString."
