@@ -6,15 +6,15 @@
   :license {:name "Eclipse Public License"
             :url "http://www.eclipse.org/legal/epl-v10.html"}
   :lein-release {:deploy-via :clojars}
-  :dependencies [[noencore "0.1.13"]
+  :dependencies [[noencore "0.1.15"]
                  [org.clojure/clojure "1.6.0"]
-                 [org.clojure/clojurescript "0.0-2197"]
                  [org.postgis/postgis-jdbc "1.3.3"]]
   :cljsbuild {:builds []}
-  :profiles {:dev {:dependencies [[com.keminglabs/cljx "0.3.2"]]
+  :profiles {:dev {:dependencies [[com.keminglabs/cljx "0.3.2"]
+                                  [org.clojure/clojurescript "0.0-2202"]]
                    :plugins [[com.keminglabs/cljx "0.3.2"] ;; Must be before Austin: https://github.com/cemerick/austin/issues/37
-                             [lein-cljsbuild "1.0.2"]
-                             [com.cemerick/austin "0.1.1"]
+                             [lein-cljsbuild "1.0.3"]
+                             [com.cemerick/austin "0.1.4"]
                              [com.cemerick/clojurescript.test "0.3.0"]]
                    :hooks [cljx.hooks leiningen.cljsbuild]
                    :cljx {:builds [{:source-paths ["src"]
