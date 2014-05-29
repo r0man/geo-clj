@@ -10,12 +10,13 @@
                  [org.clojure/clojure "1.6.0"]
                  [org.postgis/postgis-jdbc "1.3.3"]]
   :cljsbuild {:builds []}
-  :profiles {:dev {:dependencies [[com.keminglabs/cljx "0.3.2"]
-                                  [org.clojure/clojurescript "0.0-2202"]]
-                   :plugins [[com.keminglabs/cljx "0.3.2"] ;; Must be before Austin: https://github.com/cemerick/austin/issues/37
+  :test-paths ["target/test-classes"]
+  :profiles {:dev {:dependencies [[com.keminglabs/cljx "0.4.0"]
+                                  [org.clojure/clojurescript "0.0-2227"]]
+                   :plugins [[com.keminglabs/cljx "0.4.0"] ;; Must be before Austin: https://github.com/cemerick/austin/issues/37
                              [lein-cljsbuild "1.0.3"]
                              [com.cemerick/austin "0.1.4"]
-                             [com.cemerick/clojurescript.test "0.3.0"]]
+                             [com.cemerick/clojurescript.test "0.3.1"]]
                    :hooks [cljx.hooks leiningen.cljsbuild]
                    :cljx {:builds [{:source-paths ["src"]
                                     :output-path "target/classes"
@@ -35,5 +36,4 @@
                                          :compiler {:output-to "target/testable.js"
                                                     :optimizations :advanced
                                                     :pretty-print true}}]}
-                   :repl-options {:nrepl-middleware [cljx.repl-middleware/wrap-cljx]}
-                   :test-paths ["target/test-classes"]}})
+                   :repl-options {:nrepl-middleware [cljx.repl-middleware/wrap-cljx]}}})
