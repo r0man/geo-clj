@@ -13,10 +13,10 @@
   :test-paths ["target/test-classes"]
   :profiles {:dev {:dependencies [[com.keminglabs/cljx "0.4.0"]
                                   [org.clojure/clojurescript "0.0-2227"]]
-                   :plugins [[com.keminglabs/cljx "0.4.0"] ;; Must be before Austin: https://github.com/cemerick/austin/issues/37
-                             [lein-cljsbuild "1.0.3"]
-                             [com.cemerick/austin "0.1.4"]
-                             [com.cemerick/clojurescript.test "0.3.1"]]
+                   :plugins [[com.cemerick/austin "0.1.4"]
+                             [com.cemerick/clojurescript.test "0.3.1"]
+                             [com.keminglabs/cljx "0.4.0"]
+                             [lein-cljsbuild "1.0.3"]]
                    :hooks [cljx.hooks leiningen.cljsbuild]
                    :cljx {:builds [{:source-paths ["src"]
                                     :output-path "target/classes"

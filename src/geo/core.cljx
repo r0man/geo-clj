@@ -1,5 +1,6 @@
 (ns geo.core
-  (:require [clojure.string :refer [join split]]
+  (:refer-clojure :exclude [replace])
+  (:require [clojure.string :refer [join split trim replace]]
             [no.en.core :refer [parse-double]]
             #+cljs [cljs.reader :as reader]
             #+cljs [goog.math :as math]))
@@ -442,3 +443,25 @@
         west (destination-point point 270 distance)]
     [(->Point (srid point) [(point-x west) (point-y south)])
      (->Point (srid point) [(point-x east) (point-y north)])]))
+
+(defn parse-dms
+  "Parse a coordinate in degree, minutes, seconds format.
+
+  Example:
+
+    (parse-dms \"51° 28' 40.12\" N\")
+    ;=> 51.57811111111111
+"
+  [s]
+  (try
+    (let [[degrees minutes seconds]
+          (->> (split (replace (replace (trim (str s)) #"^-" "") #"[NSEW]$" "") #"[^0-9.,]+")
+               (map parse-double))]
+      (* (if (re-matches #"(?i)(^-).*|(.*[WS])$" (str s)) -1.0 1.0)
+         (cond
+          (and degrees minutes seconds)
+          (+ (/ degrees 1) (/ minutes 60) (/ seconds 360))
+          (and degrees minutes)
+          (+ (/ degrees 1) (/ minutes 60))
+          :else degrees)))
+    (catch Exception e nil)))
