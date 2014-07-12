@@ -16,11 +16,11 @@
             "lint" ["eastwood"]}
   :cljsbuild {:builds []}
   :test-paths ["target/test-classes"]
-  :profiles {:dev {:dependencies [[com.keminglabs/cljx "0.4.0"]
-                                  [jonase/eastwood "0.1.4"]]
+  :profiles {:dev {:dependencies [[com.keminglabs/cljx "0.4.0"]]
                    :plugins [[com.cemerick/austin "0.1.4"]
                              [com.cemerick/clojurescript.test "0.3.1"]
                              [com.keminglabs/cljx "0.4.0"]
+                             [jonase/eastwood "0.1.4"]
                              [lein-cljsbuild "1.0.3"]
                              [lein-difftest "2.0.0"]]
                    :hooks [cljx.hooks leiningen.cljsbuild]
