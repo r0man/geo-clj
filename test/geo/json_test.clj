@@ -45,3 +45,9 @@
     (is (= "{\"type\":\"Point\",\"coordinates\":[30.0,10.0,0.0]}"
            (generate-string geom)
            (json-str geom)))))
+
+(deftest test-encode-pg-geometry
+  (let [geom (org.postgis.PGgeometry. (point 4326 30 10 0))]
+    (is (= "{\"type\":\"Point\",\"coordinates\":[30.0,10.0,0.0]}"
+           (generate-string geom)
+           (json-str geom)))))

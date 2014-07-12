@@ -1,6 +1,6 @@
 (ns geo.json
   (:require [cheshire.core :refer [generate-string parse-string]]
-            [cheshire.generate :refer [JSONable encode-map]]
+            [cheshire.generate :refer [JSONable encode-map to-json]]
             [clojure.data.json :refer [JSONWriter json-str -write write]]
             [geo.core :refer [coordinates srid]])
   (:import (com.fasterxml.jackson.core JsonGenerator)
@@ -84,3 +84,11 @@
   JSONWriter
   (-write [geom ^PrintWriter writer]
     (write (encode-polygon geom) writer)))
+
+(extend-type org.postgis.PGgeometry
+  JSONable
+  (to-json [geom ^JsonGenerator generator]
+    (to-json (.getGeometry geom) generator))
+  JSONWriter
+  (-write [geom ^PrintWriter writer]
+    (write (.getGeometry geom) writer)))
