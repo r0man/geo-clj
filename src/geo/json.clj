@@ -32,6 +32,11 @@
   [point]
   {:type "Point" :coordinates (coordinates point)})
 
+(defn encode-polygon
+  "Encode `geom` into a GeoJSON compatible polygon data structure."
+  [geom]
+  {:type "Polygon" :coordinates (coordinates geom)})
+
 (extend-type org.postgis.LineString
   JSONable
   (to-json [geom ^JsonGenerator generator]
@@ -71,3 +76,11 @@
   JSONWriter
   (-write [geom ^PrintWriter writer]
     (write (encode-point geom) writer)))
+
+(extend-type org.postgis.Polygon
+  JSONable
+  (to-json [geom ^JsonGenerator generator]
+    (encode-map (encode-polygon geom) generator))
+  JSONWriter
+  (-write [geom ^PrintWriter writer]
+    (write (encode-polygon geom) writer)))
