@@ -14,6 +14,6 @@ Some algorithms are taken from [Movable Type Scripts](http://www.movable-type.co
 
 ## License
 
-Copyright (C) 2012 r0man
+Copyright (C) 2012-2014 r0man
 
 Distributed under the Eclipse Public License, the same as Clojure.
