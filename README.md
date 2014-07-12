@@ -2,6 +2,8 @@
 
 Geographic encoding/decoding for Clojure and ClojureScript.
 
+![Data](http://imgs.xkcd.com/comics/map_projections.png)
+
 ## Installation
 
 Via Clojars: http://clojars.org/geo-clj
