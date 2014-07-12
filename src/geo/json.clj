@@ -6,6 +6,11 @@
   (:import (com.fasterxml.jackson.core JsonGenerator)
            (java.io PrintWriter)))
 
+(defn encode-line-string
+  "Encode `line-string` into a GeoJSON compatible data structure."
+  [line-string]
+  {:type "LineString" :coordinates (coordinates line-string)})
+
 (defn encode-point
   "Encode `point` into a GeoJSON compatible data structure."
   [point]
@@ -13,8 +18,16 @@
 
 (extend-type org.postgis.Point
   JSONable
-  (to-json [point ^JsonGenerator generator]
-    (encode-map (encode-point point) generator))
+  (to-json [geom ^JsonGenerator generator]
+    (encode-map (encode-point geom) generator))
   JSONWriter
-  (-write [point ^PrintWriter writer]
-    (write (encode-point point) writer)))
+  (-write [geom ^PrintWriter writer]
+    (write (encode-point geom) writer)))
+
+(extend-type org.postgis.LineString
+  JSONable
+  (to-json [geom ^JsonGenerator generator]
+    (encode-map (encode-line-string geom) generator))
+  JSONWriter
+  (-write [geom ^PrintWriter writer]
+    (write (encode-line-string geom) writer)))

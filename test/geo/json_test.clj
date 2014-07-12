@@ -2,9 +2,17 @@
   (:require [cheshire.core :refer [generate-string]]
             [clojure.data.json :refer [json-str]]
             [clojure.test :refer :all]
-            [geo.json :refer :all]))
+            [geo.json :refer :all]
+            [geo.postgis :refer :all]))
+
+(deftest test-encode-line-string
+  (let [geom (line-string 4326 [30 10] [10 30] [40 40])]
+    (is (= "{\"type\":\"LineString\",\"coordinates\":[[30.0,10.0],[10.0,30.0],[40.0,40.0]]}"
+           (generate-string geom)
+           (json-str geom)))))
 
 (deftest test-encode-point
-  (is (= "{\"type\":\"Point\",\"coordinates\":[0.0,0.0]}"
-         (generate-string (org.postgis.Point. 0 0))
-         (json-str (org.postgis.Point. 0 0)))))
+  (let [geom (point 4326 30 10 0)]
+    (is (= "{\"type\":\"Point\",\"coordinates\":[30.0,10.0,0.0]}"
+           (generate-string geom)
+           (json-str geom)))))
