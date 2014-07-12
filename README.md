@@ -1,4 +1,6 @@
-# GEO-CLJ [![Build Status](https://travis-ci.org/r0man/geo-clj.png)](https://travis-ci.org/r0man/geo-clj)
+# geo-clj
+  [![Build Status](https://travis-ci.org/r0man/geo-clj.png)](https://travis-ci.org/r0man/geo-clj)
+  [![Dependencies Status](http://jarkeeper.com/r0man/geo-clj/status.png)](http://jarkeeper.com/r0man/geo-clj)
 
 Geographic encoding/decoding for Clojure and ClojureScript.
 
