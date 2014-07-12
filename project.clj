@@ -11,9 +11,13 @@
                  [org.clojure/clojure "1.6.0"]
                  [org.clojure/data.json "0.2.5"]
                  [org.postgis/postgis-jdbc "1.3.3"]]
+  :aliases {"ci" ["do" ["difftest"] ["lint"]]
+            "lint" ["eastwood"]}
   :cljsbuild {:builds []}
   :test-paths ["target/test-classes"]
   :profiles {:dev {:dependencies [[com.keminglabs/cljx "0.4.0"]
+                                  [jonase/eastwood "0.1.4"]
+                                  [lein-difftest "2.0.0"]
                                   [org.clojure/clojurescript "0.0-2227"]]
                    :plugins [[com.cemerick/austin "0.1.4"]
                              [com.cemerick/clojurescript.test "0.3.1"]

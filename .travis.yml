@@ -1,3 +1,3 @@
 language: clojure
-lein: lein2
+lein: lein2 ci
 install: yes | sudo LEIN_ROOT=1 lein2 upgrade
