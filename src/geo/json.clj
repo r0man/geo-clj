@@ -22,6 +22,11 @@
   [geom]
   {:type "MultiPolygon" :coordinates (coordinates geom)})
 
+(defn encode-multi-point
+  "Encode `geom` into a GeoJSON compatible multi point data structure."
+  [geom]
+  {:type "MultiPoint" :coordinates (coordinates geom)})
+
 (defn encode-point
   "Encode `point` into a GeoJSON compatible point data structure."
   [point]
@@ -50,6 +55,14 @@
   JSONWriter
   (-write [geom ^PrintWriter writer]
     (write (encode-multi-polygon geom) writer)))
+
+(extend-type org.postgis.MultiPoint
+  JSONable
+  (to-json [geom ^JsonGenerator generator]
+    (encode-map (encode-multi-point geom) generator))
+  JSONWriter
+  (-write [geom ^PrintWriter writer]
+    (write (encode-multi-point geom) writer)))
 
 (extend-type org.postgis.Point
   JSONable
