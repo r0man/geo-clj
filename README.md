@@ -8,6 +8,8 @@ Geographic encoding/decoding for Clojure and ClojureScript.
 
 Via Clojars: http://clojars.org/geo-clj
 
+[![Current Version](https://clojars.org/geo-clj/latest-version.svg)](https://clojars.org/geo-clj)
+
 ## Thanks
 
 Some algorithms are taken from [Movable Type Scripts](http://www.movable-type.co.uk/scripts/latlong.html)
