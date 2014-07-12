@@ -7,7 +7,7 @@
             :url "http://www.eclipse.org/legal/epl-v10.html"}
   :lein-release {:deploy-via :clojars}
   :dependencies [[cheshire "5.3.1"]
-                 [noencore "0.1.15"]
+                 [noencore "0.1.16"]
                  [org.clojure/clojure "1.6.0"]
                  [org.clojure/data.json "0.2.5"]
                  [org.postgis/postgis-jdbc "1.3.3"]]
@@ -17,7 +17,7 @@
   :test-paths ["target/test-classes"]
   :profiles {:dev {:dependencies [[com.keminglabs/cljx "0.4.0"]
                                   [jonase/eastwood "0.1.4"]
-                                  [org.clojure/clojurescript "0.0-2227"]]
+                                  [org.clojure/clojurescript "0.0-2268"]]
                    :plugins [[com.cemerick/austin "0.1.4"]
                              [com.cemerick/clojurescript.test "0.3.1"]
                              [com.keminglabs/cljx "0.4.0"]
