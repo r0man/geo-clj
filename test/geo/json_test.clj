@@ -18,6 +18,16 @@
            (generate-string geom)
            (json-str geom)))))
 
+(deftest test-encode-multi-polygon
+  (let [geom (multi-polygon 4326
+                            [[[40 40] [20 45] [45 30] [40 40]]]
+                            [[[20 35] [45 20] [30 5] [10 10] [10 30] [20 35]] [[30 20] [20 25] [20 15] [30 20]]])]
+    (is (= (str "{\"type\":\"MultiPolygon\",\"coordinates\":[[[[40.0,40.0],[20.0,45.0],[45.0,30.0],[40.0,40.0]]],"
+                "[[[20.0,35.0],[45.0,20.0],[30.0,5.0],[10.0,10.0],[10.0,30.0],[20.0,35.0]],[[30.0,20.0],[20.0,25.0],"
+                "[20.0,15.0],[30.0,20.0]]]]}")
+           (generate-string geom)
+           (json-str geom)))))
+
 (deftest test-encode-point
   (let [geom (point 4326 30 10 0)]
     (is (= "{\"type\":\"Point\",\"coordinates\":[30.0,10.0,0.0]}"

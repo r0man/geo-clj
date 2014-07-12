@@ -13,10 +13,14 @@
   {:type "LineString" :coordinates (coordinates geom)})
 
 (defn encode-multi-line-string
-  "Encode `geom` into a GeoJSON compatible multi line string data
-  structure."
+  "Encode `geom` into a GeoJSON compatible multi line string data structure."
   [geom]
   {:type "MultiLineString" :coordinates (coordinates geom)})
+
+(defn encode-multi-polygon
+  "Encode `geom` into a GeoJSON compatible multi polygon data structure."
+  [geom]
+  {:type "MultiPolygon" :coordinates (coordinates geom)})
 
 (defn encode-point
   "Encode `point` into a GeoJSON compatible point data structure."
@@ -38,6 +42,14 @@
   JSONWriter
   (-write [geom ^PrintWriter writer]
     (write (encode-multi-line-string geom) writer)))
+
+(extend-type org.postgis.MultiPolygon
+  JSONable
+  (to-json [geom ^JsonGenerator generator]
+    (encode-map (encode-multi-polygon geom) generator))
+  JSONWriter
+  (-write [geom ^PrintWriter writer]
+    (write (encode-multi-polygon geom) writer)))
 
 (extend-type org.postgis.Point
   JSONable
