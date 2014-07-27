@@ -7,6 +7,8 @@
             :url "http://www.eclipse.org/legal/epl-v10.html"}
   :deploy-repositories [["releases" :clojars]]
   :dependencies [[cheshire "5.3.1"]
+                 [com.cognitect/transit-clj "0.8.229"]
+                 [com.cognitect/transit-cljs "0.8.137"]
                  [noencore "0.1.16"]
                  [org.clojure/clojure "1.6.0"]
                  [org.clojure/clojurescript "0.0-2268" :scope "provided"]
