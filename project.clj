@@ -11,7 +11,7 @@
                  [com.cognitect/transit-cljs "0.8.137"]
                  [noencore "0.1.16"]
                  [org.clojure/clojure "1.6.0"]
-                 [org.clojure/clojurescript "0.0-2268" :scope "provided"]
+                 [org.clojure/clojurescript "0.0-2277" :scope "provided"]
                  [org.clojure/data.json "0.2.5"]
                  [org.postgis/postgis-jdbc "1.3.3"]]
   :aliases {"ci" ["do" ["difftest"] ["lint"]]
