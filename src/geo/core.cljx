@@ -24,7 +24,7 @@
   #+cljs js/Math.PI)
 
 (defn to-degrees
-  "Converts an angle measured in degrees to an approximately
+  "Converts an angle measured in radians to an approximately
   equivalent angle measured in degrees."
   [x]
   #+clj (Math/toDegrees x)
@@ -445,7 +445,7 @@
      (->Point (srid point) [(point-x east) (point-y north)])]))
 
 (defn parse-dms
-  "Parse a coordinate in degree, minutes, seconds format.
+  "Parse a coordinate in degrees, minutes, seconds format.
 
   Example:
 
