@@ -29,8 +29,7 @@
                    :output-path "target/test-classes"
                    :rules :cljs}]}
   :cljsbuild {:test-commands {"node" ["node" :node-runner "target/testable.js"]
-                              "phantom" ["phantomjs" :runner "target/testable.js"]
-                              "rhino" ["rhino" "-opt" "-1" :rhino-runner "target/testable.js"]}
+                              "phantom" ["phantomjs" :runner "target/testable.js"]}
               :builds [{:source-paths ["target/classes" "target/test-classes"]
                         :compiler {:output-to "target/testable.js"
                                    :optimizations :advanced
