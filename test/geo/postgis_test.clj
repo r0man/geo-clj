@@ -1,9 +1,9 @@
 (ns geo.postgis-test
   (:import [org.postgis PGgeometry LineString LinearRing MultiLineString])
   (:import [org.postgis MultiPoint MultiPolygon Point Polygon])
-  (:require [geo.core :refer [coordinates ewkt point-x point-y point-z point?]])
-  (:use clojure.test
-        geo.postgis))
+  (:require [clojure.test :refer :all]
+            [geo.core :refer [coordinates ewkt point-x point-y point-z point?]]
+            [geo.postgis :refer :all]))
 
 (deftest test-data-readers
   (binding  [*data-readers* (merge *data-readers* *readers*)]
