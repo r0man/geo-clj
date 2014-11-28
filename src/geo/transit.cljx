@@ -5,90 +5,81 @@
             #+cljs [geo.core :as impl])
   #+clj (:import (java.io ByteArrayInputStream ByteArrayOutputStream)))
 
-(defn write-handler [tag-fn rep-fn str-rep-fn]
-  #+clj (transit/write-handler tag-fn rep-fn str-rep-fn)
-  #+cljs (com.cognitect.transit/makeWriteHandler
-          #js {:tag tag-fn :rep rep-fn :stringRep str-rep-fn}))
-
-(defn read-handler [from-rep]
-  #+clj (transit/read-handler from-rep)
-  #+cljs from-rep)
-
 (def write-line-string
   "Write a line string"
-  (write-handler
+  (transit/write-handler
    (constantly "geo/line-string")
    (fn [geom] [(geo/srid geom) (geo/coordinates geom)])
    (constantly nil)))
 
 (def write-multi-line-string
   "Write a multi line string"
-  (write-handler
+  (transit/write-handler
    (constantly "geo/multi-line-string")
    (fn [geom] [(geo/srid geom) (geo/coordinates geom)])
    (constantly nil)))
 
 (def write-multi-point
   "Write a multi point"
-  (write-handler
+  (transit/write-handler
    (constantly "geo/multi-point")
    (fn [geom] [(geo/srid geom) (geo/coordinates geom)])
    (constantly nil)))
 
 (def write-multi-polygon
   "Write a multi polygon"
-  (write-handler
+  (transit/write-handler
    (constantly "geo/multi-polygon")
    (fn [geom] [(geo/srid geom) (geo/coordinates geom)])
    (constantly nil)))
 
 (def write-point
   "Write a point"
-  (write-handler
+  (transit/write-handler
    (constantly "geo/point")
    (fn [geom] [(geo/srid geom) (geo/coordinates geom)])
    (constantly nil)))
 
 (def write-polygon
   "Write a polygon"
-  (write-handler
+  (transit/write-handler
    (constantly "geo/polygon")
    (fn [geom] [(geo/srid geom) (geo/coordinates geom)])
    (constantly nil)))
 
 (def read-line-string
   "Read a line string"
-  (read-handler
+  (transit/read-handler
    (fn [[srid coordinates]]
      (apply impl/line-string srid coordinates))))
 
 (def read-multi-line-string
   "Read a multi line string"
-  (read-handler
+  (transit/read-handler
    (fn [[srid coordinates]]
      (apply impl/multi-line-string srid coordinates))))
 
 (def read-multi-point
   "Read a multi point"
-  (read-handler
+  (transit/read-handler
    (fn [[srid coordinates]]
      (apply impl/multi-point srid coordinates))))
 
 (def read-multi-polygon
   "Read a multi polygon"
-  (read-handler
+  (transit/read-handler
    (fn [[srid coordinates]]
      (apply impl/multi-polygon srid coordinates))))
 
 (def read-point
   "Read a point"
-  (read-handler
+  (transit/read-handler
    (fn [[srid coordinates]]
      (apply impl/point srid coordinates))))
 
 (def read-polygon
   "Read a polygon"
-  (read-handler
+  (transit/read-handler
    (fn [[srid coordinates]]
      (apply impl/polygon srid coordinates))))
 
