@@ -465,3 +465,16 @@
           (+ (/ degrees 1) (/ minutes 60))
           :else degrees)))
     (catch Exception e nil)))
+
+(defn parse-dms-point
+  "Parse a point in degree, minutes, seconds format."
+  [s]
+  (let [[s1 s2] (split (str s) #"\s*,\s*")
+        [c1 c2] [(parse-dms s1) (parse-dms s2)]]
+    (cond
+      (and (re-find #"N|S" (str s1))
+           (re-find #"W|E" (str s2)))
+      (point 4326 c2 c1)
+      (and (re-find #"N|S" (str s2))
+           (re-find #"W|E" (str s1)))
+      (point 4326 c1 c2))))
