@@ -5,12 +5,12 @@
   :min-lein-version "2.0.0"
   :license {:name "Eclipse Public License"
             :url "http://www.eclipse.org/legal/epl-v10.html"}
-  :dependencies [[cheshire "5.3.1"]
+  :dependencies [[cheshire "5.4.0"]
                  [com.cognitect/transit-clj "0.8.259"]
-                 [com.cognitect/transit-cljs "0.8.192"]
+                 [com.cognitect/transit-cljs "0.8.194"]
                  [noencore "0.1.18"]
                  [org.clojure/clojure "1.6.0"]
-                 [org.clojure/clojurescript "0.0-2371" :scope "provided"]
+                 [org.clojure/clojurescript "0.0-2511" :scope "provided"]
                  [org.clojure/data.json "0.2.5"]
                  [org.postgis/postgis-jdbc "1.3.3"]]
   :aliases {"ci" ["do" ["difftest"] ["lint"]]
