@@ -365,6 +365,31 @@
   (-pr-writer [geo writer opts]
     (print-geo :polygon geo writer)))
 
+(defn average
+  "Return the average of `numbers`."
+  [numbers]
+  (/ (apply + numbers) (count numbers)))
+
+(defn cartesian
+  "Convert lat/lon point to cartesian point."
+  [point]
+  (->Point -1 [(* (cos (to-radians (point-y point)))
+                  (cos (to-radians (point-x point))))
+               (* (cos (to-radians (point-y point)))
+                  (sin (to-radians (point-x point))))
+               (sin (to-radians (point-y point)))]))
+
+(defn centroid
+  "Calculate the centroid of `points`."
+  [points]
+  (let [cartesians (map cartesian points)
+        x (average (map point-x cartesians))
+        y (average (map point-y cartesians))
+        z (average (map point-z cartesians))]
+    (->Point 4326
+             [(to-degrees (atan2 y x))
+              (to-degrees (atan2 z (sqrt (+ (* x x) (* y y)))))])))
+
 (defn bearing-to
   "Returns the (initial) bearing from `point-1` to the `point-2` in degrees."
   [point-1 point-2]
@@ -449,9 +474,9 @@
 
   Example:
 
-    (parse-dms \"51° 28' 40.12\" N\")
-    ;=> 51.57811111111111
-"
+  (parse-dms \"51° 28' 40.12\" N\")
+  ;=> 51.57811111111111
+  "
   [s]
   (try
     (let [[degrees minutes seconds]
@@ -459,12 +484,12 @@
                (map parse-double))]
       (* (if (re-matches #"(?i)(^-).*|(.*[WS])$" (str s)) -1.0 1.0)
          (cond
-          (and degrees minutes seconds)
-          (+ (/ degrees 1) (/ minutes 60) (/ seconds 360))
-          (and degrees minutes)
-          (+ (/ degrees 1) (/ minutes 60))
-          :else degrees)))
-    (catch Exception e nil)))
+           (and degrees minutes seconds)
+           (+ (/ degrees 1) (/ minutes 60) (/ seconds 360))
+           (and degrees minutes)
+           (+ (/ degrees 1) (/ minutes 60))
+           :else degrees)))
+    (catch #+clj Exception #+cljs js/Error e nil)))
 
 (defn parse-dms-point
   "Parse a point in degree, minutes, seconds format."
