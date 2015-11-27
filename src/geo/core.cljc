@@ -2,8 +2,8 @@
   (:refer-clojure :exclude [replace])
   (:require [clojure.string :refer [join split trim replace]]
             [no.en.core :refer [parse-double]]
-            #+cljs [cljs.reader :as reader]
-            #+cljs [goog.math :as math]))
+            #?(:cljs [cljs.reader :as reader])
+            #?(:cljs [goog.math :as math])))
 
 (defprotocol ICoordinate
   (coordinates [obj] "Returns the coordinates of `obj`.")
@@ -20,52 +20,51 @@
 (def earth-radius 6371.0)
 
 (def pi
-  #+clj Math/PI
-  #+cljs js/Math.PI)
+  #?(:clj Math/PI :cljs js/Math.PI))
 
 (defn to-degrees
   "Converts an angle measured in degrees to an approximately
   equivalent angle measured in degrees."
   [x]
-  #+clj (Math/toDegrees x)
-  #+cljs (math/toDegrees x))
+  #?(:clj (Math/toDegrees x)
+     :cljs (math/toDegrees x)))
 
 (defn to-radians
   "Converts an angle measured in degrees to an approximately
   equivalent angle measured in radians."
   [x]
-  #+clj (Math/toRadians x)
-  #+cljs (math/toRadians x))
+  #?(:clj (Math/toRadians x)
+     :cljs (math/toRadians x)))
 
 (defn asin
   "Returns the arc sine of `x`."
   [x]
-  #+clj (Math/asin x)
-  #+cljs (.asin js/Math x))
+  #?(:clj (Math/asin x)
+     :cljs (.asin js/Math x)))
 
 (defn atan2
   "Returns the arc sine of `x`."
   [y x]
-  #+clj (Math/atan2 y x)
-  #+cljs (.atan2 js/Math y x))
+  #?(:clj (Math/atan2 y x)
+     :cljs (.atan2 js/Math y x)))
 
 (defn sin
   "Returns the sine of `x`."
   [x]
-  #+clj (Math/sin x)
-  #+cljs (.sin js/Math x))
+  #?(:clj (Math/sin x)
+     :cljs (.sin js/Math x)))
 
 (defn cos
   "Returns the cosine of `x`."
   [x]
-  #+clj (Math/cos x)
-  #+cljs (.cos js/Math x))
+  #?(:clj (Math/cos x)
+     :cljs (.cos js/Math x)))
 
 (defn sqrt
   "Returns the square root of `x`."
   [x]
-  #+clj (Math/sqrt x)
-  #+cljs (.sqrt js/Math x))
+  #?(:clj (Math/sqrt x)
+     :cljs (.sqrt js/Math x)))
 
 (defn- format-position [p]
   (let [[x y z] p]
@@ -214,12 +213,12 @@
    srid (vec (map (fn [ring] (vec (map #(vec (map float %1)) ring)))
                   coordinates))))
 
-#+clj
-(defn print-geo
-  "Print the geometric `obj` as `type` to `writer`."
-  [type obj writer]
-  (.write writer (str "#geo/" (name type) "[" (srid obj) " "))
-  (.write writer (str (pr-str (coordinates obj)) "]")))
+#?(:clj
+   (defn print-geo
+     "Print the geometric `obj` as `type` to `writer`."
+     [type obj writer]
+     (.write writer (str "#geo/" (name type) "[" (srid obj) " "))
+     (.write writer (str (pr-str (coordinates obj)) "]"))))
 
 (defn parse-location [s]
   (if (point? s)
@@ -231,67 +230,67 @@
 
 ;; PRINT-DUP
 
-#+clj
-(defmethod print-dup LineString
-  [geo writer]
-  (print-geo :line-string geo writer))
+#?(:clj
+   (defmethod print-dup LineString
+     [geo writer]
+     (print-geo :line-string geo writer)))
 
-#+clj
-(defmethod print-dup MultiLineString
-  [geo writer]
-  (print-geo :multi-line-string geo writer ))
+#?(:clj
+   (defmethod print-dup MultiLineString
+     [geo writer]
+     (print-geo :multi-line-string geo writer )))
 
-#+clj
-(defmethod print-dup MultiPoint
-  [geo writer]
-  (print-geo :multi-point geo writer))
+#?(:clj
+   (defmethod print-dup MultiPoint
+     [geo writer]
+     (print-geo :multi-point geo writer)))
 
-#+clj
-(defmethod print-dup MultiPolygon
-  [geo writer]
-  (print-geo :multi-polygon geo writer))
+#?(:clj
+   (defmethod print-dup MultiPolygon
+     [geo writer]
+     (print-geo :multi-polygon geo writer)))
 
-#+clj
-(defmethod print-dup Point
-  [geo writer]
-  (print-geo :point geo writer))
+#?(:clj
+   (defmethod print-dup Point
+     [geo writer]
+     (print-geo :point geo writer)))
 
-#+clj
-(defmethod print-dup Polygon
-  [geo writer]
-  (print-geo :polygon geo writer))
+#?(:clj
+   (defmethod print-dup Polygon
+     [geo writer]
+     (print-geo :polygon geo writer)))
 
 ;; PRINT-METHOD
 
-#+clj
-(defmethod print-method LineString
-  [geo writer]
-  (print-geo :line-string geo writer))
+#?(:clj
+   (defmethod print-method LineString
+     [geo writer]
+     (print-geo :line-string geo writer)))
 
-#+clj
-(defmethod print-method MultiLineString
-  [geo writer]
-  (print-geo :multi-line-string geo writer))
+#?(:clj
+   (defmethod print-method MultiLineString
+     [geo writer]
+     (print-geo :multi-line-string geo writer)))
 
-#+clj
-(defmethod print-method MultiPoint
-  [geo writer]
-  (print-geo :multi-point geo writer))
+#?(:clj
+   (defmethod print-method MultiPoint
+     [geo writer]
+     (print-geo :multi-point geo writer)))
 
-#+clj
-(defmethod print-method MultiPolygon
-  [geo writer]
-  (print-geo :multi-polygon geo writer))
+#?(:clj
+   (defmethod print-method MultiPolygon
+     [geo writer]
+     (print-geo :multi-polygon geo writer)))
 
-#+clj
-(defmethod print-method Point
-  [geo writer]
-  (print-geo :point geo writer))
+#?(:clj
+   (defmethod print-method Point
+     [geo writer]
+     (print-geo :point geo writer)))
 
-#+clj
-(defmethod print-method Polygon
-  [geo writer]
-  (print-geo :polygon geo writer))
+#?(:clj
+   (defmethod print-method Polygon
+     [geo writer]
+     (print-geo :polygon geo writer)))
 
 ;; READER
 
@@ -327,43 +326,42 @@
    'geo/point read-point
    'geo/polygon read-polygon})
 
-#+cljs
-(defn register-tag-parsers! []
-  (doseq [[tag f] *readers*]
-    (reader/register-tag-parser! tag f)))
+#?(:cljs
+   (defn register-tag-parsers! []
+     (doseq [[tag f] *readers*]
+       (reader/register-tag-parser! tag f))))
 
-#+cljs
-(register-tag-parsers!)
+#?(:cljs (register-tag-parsers!))
 
-#+cljs
-(defn print-geo
-  "Print the geometric `obj` as `type` to `writer`."
-  [type obj writer]
-  (-write writer (str "#geo/" (name type) "[" (srid obj) " "))
-  (-write writer (str (pr-str (coordinates obj)) "]")))
+#?(:cljs
+   (defn print-geo
+     "Print the geometric `obj` as `type` to `writer`."
+     [type obj writer]
+     (-write writer (str "#geo/" (name type) "[" (srid obj) " "))
+     (-write writer (str (pr-str (coordinates obj)) "]"))))
 
 ;; PRINTER
 
-#+cljs
-(extend-protocol IPrintWithWriter
-  LineString
-  (-pr-writer [geo writer opts]
-    (print-geo :line-string geo writer))
-  MultiLineString
-  (-pr-writer [geo writer opts]
-    (print-geo :multi-line-string geo writer))
-  MultiPoint
-  (-pr-writer [geo writer opts]
-    (print-geo :multi-point geo writer))
-  MultiPolygon
-  (-pr-writer [geo writer opts]
-    (print-geo :multi-polygon geo writer))
-  Point
-  (-pr-writer [geo writer opts]
-    (print-geo :point geo writer))
-  Polygon
-  (-pr-writer [geo writer opts]
-    (print-geo :polygon geo writer)))
+#?(:cljs
+   (extend-protocol IPrintWithWriter
+     LineString
+     (-pr-writer [geo writer opts]
+       (print-geo :line-string geo writer))
+     MultiLineString
+     (-pr-writer [geo writer opts]
+       (print-geo :multi-line-string geo writer))
+     MultiPoint
+     (-pr-writer [geo writer opts]
+       (print-geo :multi-point geo writer))
+     MultiPolygon
+     (-pr-writer [geo writer opts]
+       (print-geo :multi-polygon geo writer))
+     Point
+     (-pr-writer [geo writer opts]
+       (print-geo :point geo writer))
+     Polygon
+     (-pr-writer [geo writer opts]
+       (print-geo :polygon geo writer))))
 
 (defn average
   "Return the average of `numbers`."
@@ -489,7 +487,7 @@
            (and degrees minutes)
            (+ (/ degrees 1) (/ minutes 60))
            :else degrees)))
-    (catch #+clj Exception #+cljs js/Error e nil)))
+    (catch #?(:clj Exception :cljs js/Error) e nil)))
 
 (defn parse-dms-point
   "Parse a point in degree, minutes, seconds format."

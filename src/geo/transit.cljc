@@ -1,9 +1,9 @@
 (ns geo.transit
   (:require [geo.core :as geo]
             [cognitect.transit :as transit]
-            #+clj [geo.postgis :as impl]
-            #+cljs [geo.core :as impl])
-  #+clj (:import (java.io ByteArrayInputStream ByteArrayOutputStream)))
+            #?(:clj [geo.postgis :as impl]
+               :cljs [geo.core :as impl]))
+  #?(:clj (:import (java.io ByteArrayInputStream ByteArrayOutputStream))))
 
 (def write-line-string
   "Write a line string"
@@ -92,38 +92,38 @@
    "geo/polygon" read-polygon})
 
 (def write-handlers
-  #+clj
-  {org.postgis.LineString write-line-string
-   org.postgis.MultiLineString write-multi-line-string
-   org.postgis.MultiPoint write-multi-point
-   org.postgis.MultiPolygon write-multi-polygon
-   org.postgis.Point write-point
-   org.postgis.Polygon write-polygon}
-  #+cljs
-  {geo.core.LineString write-line-string
-   geo.core.MultiLineString write-multi-line-string
-   geo.core.MultiPoint write-multi-point
-   geo.core.MultiPolygon write-multi-polygon
-   geo.core.Point write-point
-   geo.core.Polygon write-polygon})
+  #?(:clj
+     {org.postgis.LineString write-line-string
+      org.postgis.MultiLineString write-multi-line-string
+      org.postgis.MultiPoint write-multi-point
+      org.postgis.MultiPolygon write-multi-polygon
+      org.postgis.Point write-point
+      org.postgis.Polygon write-polygon}
+     :cljs
+     {geo.core.LineString write-line-string
+      geo.core.MultiLineString write-multi-line-string
+      geo.core.MultiPoint write-multi-point
+      geo.core.MultiPolygon write-multi-polygon
+      geo.core.Point write-point
+      geo.core.Polygon write-polygon}))
 
 (defn write-str [x]
-  #+clj
-  (let [output (ByteArrayOutputStream.)
-        writer (transit/writer output :json {:handlers write-handlers})
-        _ (transit/write writer x)
-        ret (.toString output)]
-    (.reset output)
-    ret)
-  #+cljs
-  (let [writer (transit/writer :json {:handlers write-handlers})]
-    (transit/write writer x)))
+  #?(:clj
+     (let [output (ByteArrayOutputStream.)
+           writer (transit/writer output :json {:handlers write-handlers})
+           _ (transit/write writer x)
+           ret (.toString output)]
+       (.reset output)
+       ret)
+     :cljs
+     (let [writer (transit/writer :json {:handlers write-handlers})]
+       (transit/write writer x))))
 
 (defn read-str [s]
-  #+clj
-  (let [input (ByteArrayInputStream. (.getBytes s))
-        reader (transit/reader input :json {:handlers read-handlers})]
-    (transit/read reader))
-  #+cljs
-  (let [reader (transit/reader :json {:handlers read-handlers})]
-    (transit/read reader s)))
+  #?(:clj
+     (let [input (ByteArrayInputStream. (.getBytes s))
+           reader (transit/reader input :json {:handlers read-handlers})]
+       (transit/read reader))
+     :cljs
+     (let [reader (transit/reader :json {:handlers read-handlers})]
+       (transit/read reader s))))
