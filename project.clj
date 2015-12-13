@@ -13,7 +13,7 @@
                  [org.clojure/clojurescript "1.7.170" :scope "provided"]
                  [org.clojure/data.json "0.2.6"]
                  [org.postgresql/postgresql "9.4-1201-jdbc41"]
-                 [org.postgis/postgis-jdbc "1.3.3" :exclusions [postgresql]]]
+                 [net.postgis/postgis-jdbc "2.2.0" :exclusions [postgresql]]]
   :aliases {"ci" ["do" ["test"] ["doo" "phantom" "test" "once"] ["lint"]]
             "lint" ["do"  ["eastwood"]]}
   :cljsbuild {:builds [{:id "test"
