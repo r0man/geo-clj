@@ -27,4 +27,4 @@
                    :plugins [[jonase/eastwood "0.2.2"]
                              [lein-cljsbuild "1.1.1"]
                              [lein-difftest "2.0.0"]
-                             [lein-doo "0.1.6-rc.1"]]}})
+                             [lein-doo "0.1.6"]]}})
