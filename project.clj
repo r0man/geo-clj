@@ -10,7 +10,7 @@
                  [com.cognitect/transit-cljs "0.8.232" :scope "provided"]
                  [noencore "0.2.0"]
                  [org.clojure/clojure "1.7.0"]
-                 [org.clojure/clojurescript "1.7.170" :scope "provided"]
+                 [org.clojure/clojurescript "1.7.189" :scope "provided"]
                  [org.clojure/data.json "0.2.6"]
                  [org.postgresql/postgresql "9.4-1201-jdbc41"]
                  [net.postgis/postgis-jdbc "2.2.0" :exclusions [postgresql]]]
