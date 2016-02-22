@@ -88,6 +88,8 @@
          (>= number -180.0)
          (<= number 180.0))))
 
+(defrecord BoundingBox [south-west north-east])
+
 (defrecord LineString [srid coordinates]
   ICoordinate
   (coordinates [geo]
@@ -181,6 +183,11 @@
   (and (not (nil? x))
        (satisfies? IPoint x)))
 
+(defn bounding-box
+  "Make a new Bounding Box."
+  [south-west north-east]
+  (->BoundingBox south-west north-east))
+
 (defn line-string
   "Make a new LineString."
   [srid & coordinates]
@@ -220,6 +227,14 @@
      (.write writer (str "#geo/" (name type) "[" (srid obj) " "))
      (.write writer (str (pr-str (coordinates obj)) "]"))))
 
+#?(:clj
+   (defn print-bounding-box
+     "Print the geometric `obj` as `type` to `writer`."
+     [box writer]
+     (.write writer (str "#geo/bounding-box["))
+     (.write writer (str (pr-str (:south-west box)) " "))
+     (.write writer (str (pr-str (:north-east box)) "]"))))
+
 (defn parse-location [s]
   (if (point? s)
     s (let [parts (->> (split (str s) #"\s*,\s*")
@@ -229,6 +244,11 @@
           (apply point 4326 (reverse parts))))))
 
 ;; PRINT-DUP
+
+#?(:clj
+   (defmethod print-dup BoundingBox
+     [box writer]
+     (print-bounding-box box writer)))
 
 #?(:clj
    (defmethod print-dup LineString
@@ -263,6 +283,11 @@
 ;; PRINT-METHOD
 
 #?(:clj
+   (defmethod print-method BoundingBox
+     [box writer]
+     (print-bounding-box box writer)))
+
+#?(:clj
    (defmethod print-method LineString
      [geo writer]
      (print-geo :line-string geo writer)))
@@ -294,6 +319,10 @@
 
 ;; READER
 
+(defn read-bounding-box
+  "Read a LineString from `coordinates`."
+  [[south-west north-east]] (->BoundingBox south-west north-east))
+
 (defn read-line-string
   "Read a LineString from `coordinates`."
   [[srid coordinates]] (->LineString srid coordinates))
@@ -319,7 +348,8 @@
   [[srid coordinates]] (->Polygon srid coordinates))
 
 (def ^:dynamic *readers*
-  {'geo/line-string read-line-string
+  {'geo/bounding-box read-bounding-box
+   'geo/line-string read-line-string
    'geo/multi-line-string read-multi-line-string
    'geo/multi-point read-multi-point
    'geo/multi-polygon read-multi-polygon
@@ -340,10 +370,21 @@
      (-write writer (str "#geo/" (name type) "[" (srid obj) " "))
      (-write writer (str (pr-str (coordinates obj)) "]"))))
 
+#?(:cljs
+   (defn print-bounding-box
+     "Print `bounding-box` to `writer`."
+     [bounding-box writer]
+     (-write writer (str "#geo/bounding-box["))
+     (-write writer (str (pr-str (:south-west bounding-box)) " "))
+     (-write writer (str (pr-str (:north-east bounding-box)) "]"))))
+
 ;; PRINTER
 
 #?(:cljs
    (extend-protocol IPrintWithWriter
+     BoundingBox
+     (-pr-writer [bounding-box writer opts]
+       (print-bounding-box bounding-box writer))
      LineString
      (-pr-writer [geo writer opts]
        (print-geo :line-string geo writer))
@@ -459,13 +500,14 @@
             180)
          360)))
 
-(defn bounding-box [point distance]
+(defn bounding-box-at-point [point distance]
   (let [north (destination-point point 0 distance)
         east (destination-point point 90 distance)
         south (destination-point point 180 distance)
         west (destination-point point 270 distance)]
-    [(->Point (srid point) [(point-x west) (point-y south)])
-     (->Point (srid point) [(point-x east) (point-y north)])]))
+    (bounding-box
+     (->Point (srid point) [(point-x west) (point-y south)])
+     (->Point (srid point) [(point-x east) (point-y north)]))))
 
 (defn parse-dms
   "Parse a coordinate in degree, minutes, seconds format.

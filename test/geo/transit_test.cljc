@@ -6,6 +6,12 @@
             #?(:clj [geo.postgis :as impl]
                :cljs [geo.core :as impl])))
 
+(deftest test-encode-bounding-box
+  (let [geom (impl/bounding-box (impl/point 4326 -20.74 -4.19) (impl/point 4326 15.46 7.34))]
+    (is (= #?(:clj "[\"~#geo/bounding-box\",[[\"~#geo/point\",[4326,[-20.74,-4.19]]],[\"^1\",[4326,[15.46,7.34]]]]]"
+              :cljs "[\"~#geo/bounding-box\",[[\"~#geo/point\",[4326,[-20.74,-4.19]]],[\"^1\",[4326,[15.46,7.34]]]]]")
+           (write-str geom)))))
+
 (deftest test-encode-line-string
   (let [geom (impl/line-string 4326 [30 10] [10 30] [40 40])]
     (is (= #?(:clj "[\"~#geo/line-string\",[4326,[[30.0,10.0],[10.0,30.0],[40.0,40.0]]]]"
@@ -59,6 +65,7 @@
 (deftest test-roundtrip
   (are [x]
       (= x (read-str (write-str x)))
+    (impl/bounding-box (impl/point 4326 -20.74 -4.19) (impl/point 4326 15.46 7.34))
     (impl/line-string 4326 [30 10] [10 30] [40 40])
     (impl/multi-line-string 4326 [[10 10] [20 20] [10 40]] [[40 40] [30 30] [40 20] [30 10]])
     (impl/multi-polygon

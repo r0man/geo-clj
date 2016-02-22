@@ -5,6 +5,15 @@
                :cljs [geo.core :as impl]))
   #?(:clj (:import (java.io ByteArrayInputStream ByteArrayOutputStream))))
 
+(def write-bounding-box
+  "Write a bounding box."
+  (transit/write-handler
+   (constantly "geo/bounding-box")
+   (fn [bounding-box]
+     [(#?(:clj .getLLB :cljs :south-west) bounding-box)
+      (#?(:clj .getURT :cljs :north-east) bounding-box)])
+   (constantly nil)))
+
 (def write-line-string
   "Write a line string"
   (transit/write-handler
@@ -47,6 +56,12 @@
    (fn [geom] [(geo/srid geom) (geo/coordinates geom)])
    (constantly nil)))
 
+(def read-bounding-box
+  "Read a bounding box."
+  (transit/read-handler
+   (fn [[south-west north-east]]
+     (impl/bounding-box south-west north-east))))
+
 (def read-line-string
   "Read a line string"
   (transit/read-handler
@@ -84,7 +99,8 @@
      (apply impl/polygon srid coordinates))))
 
 (def read-handlers
-  {"geo/line-string" read-line-string
+  {"geo/bounding-box" read-bounding-box
+   "geo/line-string" read-line-string
    "geo/multi-line-string" read-multi-line-string
    "geo/multi-point" read-multi-point
    "geo/multi-polygon" read-multi-polygon
@@ -97,10 +113,12 @@
       org.postgis.MultiLineString write-multi-line-string
       org.postgis.MultiPoint write-multi-point
       org.postgis.MultiPolygon write-multi-polygon
+      org.postgis.PGbox2d write-bounding-box
       org.postgis.Point write-point
       org.postgis.Polygon write-polygon}
      :cljs
-     {geo.core.LineString write-line-string
+     {geo.core.BoundingBox write-bounding-box
+      geo.core.LineString write-line-string
       geo.core.MultiLineString write-multi-line-string
       geo.core.MultiPoint write-multi-point
       geo.core.MultiPolygon write-multi-polygon
