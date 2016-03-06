@@ -1,4 +1,4 @@
-(defproject geo-clj "0.4.3-SNAPSHOT"
+(defproject geo-clj "0.5.0-SNAPSHOT"
   :description "Geographic encoding/decoding for Clojure and ClojureScript."
   :url "http://github.com/r0man/geo-clj"
   :author "r0man"
@@ -12,16 +12,33 @@
                  [org.clojure/clojure "1.8.0"]
                  [org.clojure/clojurescript "1.7.228" :scope "provided"]
                  [org.clojure/data.json "0.2.6"]
-                 [org.postgresql/postgresql "9.4.1207"]
+                 [org.postgresql/postgresql "9.4.1208"]
                  [net.postgis/postgis-jdbc "2.2.0" :exclusions [postgresql]]]
-  :aliases {"ci" ["do" ["test"] ["doo" "phantom" "test" "once"] ["lint"]]
+  :aliases {"ci" ["do"
+                  ["test"]
+                  ["doo" "phantom" "none" "once"]
+                  ["doo" "phantom" "advanced" "once"]
+                  ["lint"]]
             "lint" ["do"  ["eastwood"]]}
-  :cljsbuild {:builds [{:id "test"
-                        :compiler {:main 'geo.test
-                                   :optimizations :advanced
-                                   :output-dir "target"
-                                   :output-to "target/testable.js"
-                                   :pretty-print true}
+  :cljsbuild {:builds [{:id "none"
+                        :compiler
+                        {:asset-path "target/none/out"
+                         :main geo.test
+                         :output-to "target/none/geo-clj.js"
+                         :output-dir "target/none/out"
+                         :optimizations :none
+                         :pretty-print true
+                         :source-map true
+                         :verbose true}
+                        :source-paths ["src" "test"]}
+                       {:id "advanced"
+                        :compiler
+                        {:asset-path "target/advanced/out"
+                         :main geo.test
+                         :output-to "target/advanced/geo-clj.js"
+                         :optimizations :advanced
+                         :pretty-print true
+                         :verbose true}
                         :source-paths ["src" "test"]}]}
   :deploy-repositories [["releases" :clojars]]
   :profiles {:dev {:dependencies [[com.cemerick/piggieback "0.2.1"]]

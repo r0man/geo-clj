@@ -8,7 +8,8 @@
 (deftest test-data-readers
   (binding  [*data-readers* (merge *data-readers* *readers*)]
     (are [geo]
-      (is (= geo (read-string (pr-str geo))))
+        (= geo (read-string (pr-str geo)))
+      (bounding-box (point 4326 -20.74 -4.19) (point 4326 15.46 7.34))
       (line-string 4326 [30 10] [10 30] [40 40])
       (multi-line-string 4326 [[10 10] [20 20] [10 40]] [[40 40] [30 30] [40 20] [30 10]])
       (multi-polygon 4326 [[[40 40] [20 45] [45 30] [40 40]]] [[[20 35] [45 20] [30 5] [10 10] [10 30] [20 35]] [[30 20] [20 25] [20 15] [30 20]]])

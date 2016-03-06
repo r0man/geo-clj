@@ -4,11 +4,18 @@
                :cljs [cljs.test :refer-macros [deftest is are testing]])
             #?(:cljs [cljs.reader :as reader])))
 
+(deftest test-bounding-box
+  (let [box (geo/bounding-box (geo/point 4326 -20.74 -4.19) (geo/point 4326 15.46 7.34))]
+    (is (= #?(:clj "#geo/bounding-box[#geo/point[4326 [-20.74 -4.19]] #geo/point[4326 [15.46 7.34]]]"
+              :cljs "#geo/bounding-box[#geo/point[4326 [-20.74 -4.19]] #geo/point[4326 [15.46 7.34]]]")
+           (pr-str box)))))
+
 (deftest test-data-readers
   #?(:clj
      (binding  [*data-readers* (merge *data-readers* geo/*readers*)]
        (are [geo]
-           (is (= geo (read-string (pr-str geo))))
+           (= geo (read-string (pr-str geo)))
+         (geo/bounding-box (geo/point 4326 -20.74 -4.19) (geo/point 4326 15.46 7.34))
          (geo/line-string 4326 [30 10] [10 30] [40 40])
          (geo/multi-line-string 4326 [[10 10] [20 20] [10 40]] [[40 40] [30 30] [40 20] [30 10]])
          (geo/multi-point 4326 [10 40] [40 30] [20 20] [30 10])
@@ -16,7 +23,8 @@
          (geo/point 4326 30 10 0)
          (geo/polygon 4326 [[30 10] [10 20] [20 40] [40 40] [30 10]])))
      :cljs
-     (doseq [geo [(geo/line-string 4326 [30 10] [10 30] [40 40])
+     (doseq [geo [(geo/bounding-box (geo/point 4326 -20.74 -4.19) (geo/point 4326 15.46 7.34))
+                  (geo/line-string 4326 [30 10] [10 30] [40 40])
                   (geo/multi-line-string 4326 [[10 10] [20 20] [10 40]] [[40 40] [30 30] [40 20] [30 10]])
                   (geo/multi-point 4326 [10 40] [40 30] [20 20] [30 10])
                   (geo/multi-polygon 4326 [[[40 40] [20 45] [45 30] [40 40]]] [[[20 35] [45 20] [30 5] [10 10] [10 30] [20 35]] [[30 20] [20 25] [20 15] [30 20]]])
@@ -241,3 +249,11 @@
     [(geo/point 4326 -9.359666666666667 38.68873333333333)
      (geo/point 4326 -9.359666666666667 38.68873333333333)]
     (geo/point 4326 -9.359666666666667 38.68873333333333)))
+
+(deftest test-bounding-box-at-point
+  (are [point distance expected]
+      (= (geo/bounding-box-at-point point distance) expected)
+    (geo/point 4326 -9.35 38.68) 0
+    (geo/bounding-box
+     (geo/point 4326 -9.349999999999978 38.68)
+     (geo/point 4326 -9.349999999999978 38.68))))

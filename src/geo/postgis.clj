@@ -1,10 +1,15 @@
 (ns geo.postgis
-  (:import [org.postgis PGgeometry LineString LinearRing MultiLineString])
+  (:import [org.postgis PGbox2d PGgeometry LineString LinearRing MultiLineString])
   (:import [org.postgis MultiPoint MultiPolygon Point Polygon])
   (:require [geo.core :as core]))
 
 (defprotocol IGeometry
   (geometry [obj] "Convert `obj` into a PostGIS geometry."))
+
+(defn bounding-box
+  "Make a new bounding box."
+  [south-west north-east]
+  (PGbox2d. south-west north-east))
 
 (defn point
   "Make a new Point."
@@ -60,11 +65,14 @@
            (core/point-y p)
            (core/point-z p))))
 
-;; PRINT-DUP
+(defn print-bounding-box
+  "Print the `bounding-box` to `writer`."
+  [bounding-box writer]
+  (.write writer (str "#geo/bounding-box["))
+  (.write writer (str (pr-str (.getLLB bounding-box)) " "))
+  (.write writer (str (pr-str (.getURT bounding-box)) "]")))
 
-(defmethod print-method PGgeometry
-  [geo writer]
-  (print-method (.getGeometry geo) writer))
+;; PRINT-DUP
 
 (defmethod print-dup LineString
   [geo writer]
@@ -81,6 +89,14 @@
 (defmethod print-dup MultiPolygon
   [geo writer]
   (core/print-geo :multi-polygon geo writer))
+
+(defmethod print-dup PGbox2d
+  [bounding-box writer]
+  (print-bounding-box bounding-box writer))
+
+(defmethod print-dup PGgeometry
+  [geo writer]
+  (print-method (.getGeometry geo) writer))
 
 (defmethod print-dup Point
   [geo writer]
@@ -108,6 +124,14 @@
   [geo writer]
   (core/print-geo :multi-polygon geo writer))
 
+(defmethod print-method PGbox2d
+  [bounding-box writer]
+  (print-bounding-box bounding-box writer))
+
+(defmethod print-method PGgeometry
+  [geo writer]
+  (print-method (.getGeometry geo) writer))
+
 (defmethod print-method Point
   [geo writer]
   (core/print-geo :point geo writer))
@@ -117,6 +141,11 @@
   (core/print-geo :polygon geo writer))
 
 ;; READER
+
+(defn read-bounding-box
+  "Read a LineString from `coordinates`."
+  [[south-west north-east]]
+  (PGbox2d. south-west north-east))
 
 (defn read-line-string
   "Read a LineString from `coordinates`."
@@ -143,7 +172,8 @@
   [[srid coordinates]] (apply polygon srid coordinates))
 
 (def ^:dynamic *readers*
-  {'geo/line-string read-line-string
+  {'geo/bounding-box read-bounding-box
+   'geo/line-string read-line-string
    'geo/multi-line-string read-multi-line-string
    'geo/multi-point read-multi-point
    'geo/multi-polygon read-multi-polygon
@@ -260,6 +290,13 @@
 
 (defn- core-geom [f geo]
   (geometry (apply f (core/srid geo) (core/coordinates geo))))
+
+(extend-type geo.core.BoundingBox
+  IGeometry
+  (geometry [box]
+    (PGbox2d.
+     (geometry (:south-west box))
+     (geometry (:north-west box)))))
 
 (extend-type geo.core.LineString
   IGeometry
