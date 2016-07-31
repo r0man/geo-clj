@@ -1,3 +1,5 @@
 language: clojure
 script: lein ci
 sudo: false
+jdk:
+  - oraclejdk8
