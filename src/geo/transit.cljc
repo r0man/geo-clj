@@ -109,7 +109,13 @@
 
 (def write-handlers
   #?(:clj
-     {org.postgis.LineString write-line-string
+     {geo.core.LineString write-line-string
+      geo.core.MultiLineString write-multi-line-string
+      geo.core.MultiPoint write-multi-point
+      geo.core.MultiPolygon write-multi-polygon
+      geo.core.Point write-point
+      geo.core.Polygon write-polygon
+      org.postgis.LineString write-line-string
       org.postgis.MultiLineString write-multi-line-string
       org.postgis.MultiPoint write-multi-point
       org.postgis.MultiPolygon write-multi-polygon
