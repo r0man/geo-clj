@@ -44,6 +44,6 @@
              :provided {:dependencies [[com.cognitect/transit-clj "0.8.288"]
                                        [com.cognitect/transit-cljs "0.8.239"]
                                        [net.postgis/postgis-jdbc "2.2.1"
-                                        :exclusions [postgresql org.postgresql]]
+                                        :exclusions [postgresql org.postgresql/postgresql]]
                                        [org.clojure/clojurescript "1.9.36"]
                                        [org.postgresql/postgresql "9.4.1209"]]}})
