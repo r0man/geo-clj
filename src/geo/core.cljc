@@ -455,8 +455,7 @@
         lat-2 (asin (+ (* (sin lat-1) (cos distance))
                        (* (cos lat-1) (sin distance) (cos bearing))))
         lon-2 (+ lon-1 (atan2 (* (sin bearing) (sin distance) (cos lat-1))
-                              (* (- (cos distance)
-                                    (* (sin lat-1) (sin lat-2))))))]
+                              (- (cos distance) (* (sin lat-1) (sin lat-2)))))]
     (->Point (srid point)
              [(to-degrees (- (mod (+ lon-2 (* 3 pi))
                                   (* 2 pi))

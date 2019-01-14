@@ -5,9 +5,9 @@
   :min-lein-version "2.6.1"
   :license {:name "Eclipse Public License"
             :url "http://www.eclipse.org/legal/epl-v10.html"}
-  :dependencies [[cheshire "5.6.3"]
-                 [noencore "0.3.3"]
-                 [org.clojure/clojure "1.8.0"]
+  :dependencies [[cheshire "5.8.1"]
+                 [noencore "0.3.6"]
+                 [org.clojure/clojure "1.10.0"]
                  [org.clojure/data.json "0.2.6"]]
   :aliases {"ci" ["do"
                   ["test"]
@@ -21,29 +21,23 @@
                          :main geo.test
                          :output-to "target/none/geo-clj.js"
                          :output-dir "target/none/out"
-                         :optimizations :none
-                         :pretty-print true
-                         :source-map true
-                         :verbose true}
+                         :optimizations :none}
                         :source-paths ["src" "test"]}
                        {:id "advanced"
                         :compiler
                         {:asset-path "target/advanced/out"
                          :main geo.test
                          :output-to "target/advanced/geo-clj.js"
-                         :optimizations :advanced
-                         :pretty-print true
-                         :verbose true}
+                         :optimizations :advanced}
                         :source-paths ["src" "test"]}]}
   :deploy-repositories [["releases" :clojars]]
-  :profiles {:dev {:dependencies [[com.cemerick/piggieback "0.2.1"]]
-                   :plugins [[jonase/eastwood "0.2.3"]
-                             [lein-cljsbuild "1.1.3"]
+  :profiles {:dev {:plugins [[jonase/eastwood "0.3.4"]
+                             [lein-cljsbuild "1.1.7"]
                              [lein-difftest "2.0.0"]
-                             [lein-doo "0.1.7" :exclusions [org.clojure/clojurescript]]]}
-             :provided {:dependencies [[com.cognitect/transit-clj "0.8.288"]
-                                       [com.cognitect/transit-cljs "0.8.239"]
-                                       [net.postgis/postgis-jdbc "2.2.1"
+                             [lein-doo "0.1.11" :exclusions [org.clojure/clojurescript]]]}
+             :provided {:dependencies [[com.cognitect/transit-clj "0.8.313"]
+                                       [com.cognitect/transit-cljs "0.8.256"]
+                                       [net.postgis/postgis-jdbc "2.3.0"
                                         :exclusions [postgresql org.postgresql/postgresql]]
-                                       [org.clojure/clojurescript "1.9.36"]
-                                       [org.postgresql/postgresql "9.4.1209"]]}})
+                                       [org.clojure/clojurescript "1.10.439"]
+                                       [org.postgresql/postgresql "42.2.5"]]}})
