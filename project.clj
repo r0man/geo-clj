@@ -5,7 +5,7 @@
   :min-lein-version "2.6.1"
   :license {:name "Eclipse Public License"
             :url "http://www.eclipse.org/legal/epl-v10.html"}
-  :dependencies [[cheshire "5.9.0"]
+  :dependencies [[cheshire "5.10.0"]
                  [noencore "0.3.6"]
                  [org.clojure/clojure "1.10.1"]
                  [org.clojure/data.json "0.2.7"]]
@@ -31,8 +31,8 @@
                          :optimizations :advanced}
                         :source-paths ["src" "test"]}]}
   :deploy-repositories [["releases" :clojars]]
-  :profiles {:dev {:plugins [[jonase/eastwood "0.3.6"]
-                             [lein-cljsbuild "1.1.7"]
+  :profiles {:dev {:plugins [[jonase/eastwood "0.3.11"]
+                             [lein-cljsbuild "1.1.8"]
                              [lein-difftest "2.0.0"]
                              [lein-doo "0.1.11" :exclusions [org.clojure/clojurescript]]]}
              :provided {:dependencies [[com.cognitect/transit-clj "0.8.319"]

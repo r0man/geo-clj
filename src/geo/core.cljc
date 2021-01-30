@@ -524,7 +524,7 @@
       (* (if (re-matches #"(?i)(^-).*|(.*[WS])$" (str s)) -1.0 1.0)
          (cond
            (and degrees minutes seconds)
-           (+ (/ degrees 1) (/ minutes 60) (/ seconds 360))
+           (+ (/ degrees 1) (/ minutes 60) (/ seconds 3600))
            (and degrees minutes)
            (+ (/ degrees 1) (/ minutes 60))
            :else degrees)))
