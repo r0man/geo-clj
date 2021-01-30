@@ -7,8 +7,8 @@
             :url "http://www.eclipse.org/legal/epl-v10.html"}
   :dependencies [[cheshire "5.10.0"]
                  [noencore "0.3.6"]
-                 [org.clojure/clojure "1.10.1"]
-                 [org.clojure/data.json "0.2.7"]]
+                 [org.clojure/clojure "1.10.2"]
+                 [org.clojure/data.json "1.0.0"]]
   :aliases {"ci" ["do"
                   ["test"]
                   ["doo" "phantom" "none" "once"]
@@ -31,13 +31,12 @@
                          :optimizations :advanced}
                         :source-paths ["src" "test"]}]}
   :deploy-repositories [["releases" :clojars]]
-  :profiles {:dev {:plugins [[jonase/eastwood "0.3.11"]
+  :profiles {:dev {:plugins [[jonase/eastwood "0.3.13"]
                              [lein-cljsbuild "1.1.8"]
                              [lein-difftest "2.0.0"]
                              [lein-doo "0.1.11" :exclusions [org.clojure/clojurescript]]]}
-             :provided {:dependencies [[com.cognitect/transit-clj "0.8.319"]
-                                       [com.cognitect/transit-cljs "0.8.256"]
-                                       [net.postgis/postgis-jdbc "2.3.0"
-                                        :exclusions [postgresql org.postgresql/postgresql]]
+             :provided {:dependencies [[com.cognitect/transit-clj "1.0.324"]
+                                       [com.cognitect/transit-cljs "0.8.264"]
+                                       [net.postgis/postgis-jdbc "2.5.0" :exclusions [postgresql org.postgresql/postgresql]]
                                        [org.clojure/clojurescript "1.10.597"]
-                                       [org.postgresql/postgresql "42.2.9"]]}})
+                                       [org.postgresql/postgresql "42.2.18"]]}})
