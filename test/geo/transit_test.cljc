@@ -58,7 +58,7 @@
            (write-str geom)))))
 
 ;; (deftest test-encode-pg-geometry
-;;   (let [geom (org.postgis.PGgeometry. (impl/point 4326 30 10 0))]
+;;   (let [geom (net.postgis.PGgeometry. (impl/point 4326 30 10 0))]
 ;;     (is (= "{\"type\":\"Point\",\"coordinates\":[30.0,10.0,0.0]}"
 ;;            (write-str geom)))))
 

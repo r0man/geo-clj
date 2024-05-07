@@ -115,13 +115,13 @@
       geo.core.MultiPolygon write-multi-polygon
       geo.core.Point write-point
       geo.core.Polygon write-polygon
-      org.postgis.LineString write-line-string
-      org.postgis.MultiLineString write-multi-line-string
-      org.postgis.MultiPoint write-multi-point
-      org.postgis.MultiPolygon write-multi-polygon
-      org.postgis.PGbox2d write-bounding-box
-      org.postgis.Point write-point
-      org.postgis.Polygon write-polygon}
+      net.postgis.jdbc.PGbox2d write-bounding-box
+      net.postgis.jdbc.geometry.LineString write-line-string
+      net.postgis.jdbc.geometry.MultiLineString write-multi-line-string
+      net.postgis.jdbc.geometry.MultiPoint write-multi-point
+      net.postgis.jdbc.geometry.MultiPolygon write-multi-polygon
+      net.postgis.jdbc.geometry.Point write-point
+      net.postgis.jdbc.geometry.Polygon write-polygon}
      :cljs
      {geo.core.BoundingBox write-bounding-box
       geo.core.LineString write-line-string

@@ -1,8 +1,7 @@
 (ns geo.json
-  (:require [cheshire.core :refer [generate-string parse-string]]
-            [cheshire.generate :refer [JSONable encode-map to-json]]
-            [clojure.data.json :refer [JSONWriter json-str -write write]]
-            [geo.core :refer [coordinates srid]])
+  (:require [cheshire.generate :refer [encode-map JSONable to-json]]
+            [clojure.data.json :refer [-write JSONWriter write]]
+            [geo.core :refer [coordinates]])
   (:import (com.fasterxml.jackson.core JsonGenerator)
            (java.io PrintWriter)))
 
@@ -37,58 +36,58 @@
   [geom]
   {:type "Polygon" :coordinates (coordinates geom)})
 
-(extend-type org.postgis.LineString
+(extend-type net.postgis.jdbc.geometry.LineString
   JSONable
   (to-json [geom ^JsonGenerator generator]
     (encode-map (encode-line-string geom) generator))
   JSONWriter
-  (-write [geom ^PrintWriter writer]
-    (write (encode-line-string geom) writer)))
+  (-write [geom ^PrintWriter writer options]
+    (-write (encode-line-string geom) writer options)))
 
-(extend-type org.postgis.MultiLineString
+(extend-type net.postgis.jdbc.geometry.MultiLineString
   JSONable
   (to-json [geom ^JsonGenerator generator]
     (encode-map (encode-multi-line-string geom) generator))
   JSONWriter
-  (-write [geom ^PrintWriter writer]
-    (write (encode-multi-line-string geom) writer)))
+  (-write [geom ^PrintWriter writer options]
+    (-write (encode-multi-line-string geom) writer options)))
 
-(extend-type org.postgis.MultiPolygon
+(extend-type net.postgis.jdbc.geometry.MultiPolygon
   JSONable
   (to-json [geom ^JsonGenerator generator]
     (encode-map (encode-multi-polygon geom) generator))
   JSONWriter
-  (-write [geom ^PrintWriter writer]
-    (write (encode-multi-polygon geom) writer)))
+  (-write [geom ^PrintWriter writer options]
+    (-write (encode-multi-polygon geom) writer options)))
 
-(extend-type org.postgis.MultiPoint
+(extend-type net.postgis.jdbc.geometry.MultiPoint
   JSONable
   (to-json [geom ^JsonGenerator generator]
     (encode-map (encode-multi-point geom) generator))
   JSONWriter
-  (-write [geom ^PrintWriter writer]
-    (write (encode-multi-point geom) writer)))
+  (-write [geom ^PrintWriter writer options]
+    (-write (encode-multi-point geom) writer options)))
 
-(extend-type org.postgis.Point
+(extend-type net.postgis.jdbc.geometry.Point
   JSONable
   (to-json [geom ^JsonGenerator generator]
     (encode-map (encode-point geom) generator))
   JSONWriter
-  (-write [geom ^PrintWriter writer]
-    (write (encode-point geom) writer)))
+  (-write [geom ^PrintWriter writer options]
+    (-write (encode-point geom) writer options)))
 
-(extend-type org.postgis.Polygon
+(extend-type net.postgis.jdbc.geometry.Polygon
   JSONable
   (to-json [geom ^JsonGenerator generator]
     (encode-map (encode-polygon geom) generator))
   JSONWriter
-  (-write [geom ^PrintWriter writer]
-    (write (encode-polygon geom) writer)))
+  (-write [geom ^PrintWriter writer options]
+    (-write (encode-polygon geom) writer options)))
 
-(extend-type org.postgis.PGgeometry
+(extend-type net.postgis.jdbc.PGgeometry
   JSONable
   (to-json [geom ^JsonGenerator generator]
     (to-json (.getGeometry geom) generator))
   JSONWriter
-  (-write [geom ^PrintWriter writer]
-    (write (.getGeometry geom) writer)))
+  (-write [geom ^PrintWriter writer options]
+    (-write (.getGeometry geom) writer options)))

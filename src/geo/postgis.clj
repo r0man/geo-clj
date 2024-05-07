@@ -1,7 +1,8 @@
 (ns geo.postgis
-  (:import [org.postgis PGbox2d PGgeometry LineString LinearRing MultiLineString])
-  (:import [org.postgis MultiPoint MultiPolygon Point Polygon])
-  (:require [geo.core :as core]))
+  (:require [geo.core :as core])
+  (:import (net.postgis.jdbc PGbox2d PGgeometry)
+           (net.postgis.jdbc.geometry LinearRing LineString MultiLineString
+                                      MultiPoint MultiPolygon Point Polygon)))
 
 (defprotocol IGeometry
   (geometry [obj] "Convert `obj` into a PostGIS geometry."))
@@ -80,7 +81,7 @@
 
 (defmethod print-dup MultiLineString
   [geo writer]
-  (core/print-geo :multi-line-string geo writer ))
+  (core/print-geo :multi-line-string geo writer))
 
 (defmethod print-dup MultiPoint
   [geo writer]

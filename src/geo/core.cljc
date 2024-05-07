@@ -1,5 +1,5 @@
 (ns geo.core
-  (:refer-clojure :exclude [replace])
+  (:refer-clojure :exclude [replace parse-double])
   (:require [clojure.string :refer [join split trim replace]]
             [no.en.core :refer [parse-double]]
             #?(:cljs [cljs.reader :as reader])

@@ -1,6 +1,6 @@
 (ns geo.postgis-test
-  (:import [org.postgis PGgeometry LineString LinearRing MultiLineString])
-  (:import [org.postgis MultiPoint MultiPolygon Point Polygon])
+  (:import [net.postgis.jdbc PGgeometry])
+  (:import [net.postgis.jdbc.geometry LineString LinearRing MultiLineString MultiPoint MultiPolygon Point Polygon])
   (:require [clojure.test :refer :all]
             [geo.core :refer [coordinates ewkt point-x point-y point-z point?]]
             [geo.postgis :refer :all]))
